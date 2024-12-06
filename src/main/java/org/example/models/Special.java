@@ -22,6 +22,13 @@ public class Special extends MenuItem{
         this.eventSpecial = eventSpecial;
     }
 
+    public Special(MenuItem menuItem, boolean chefSpecial, boolean foodSpecial, boolean eventSpecial) {
+        super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
+        this.chefSpecial = chefSpecial;
+        this.foodSpecial = foodSpecial;
+        this.eventSpecial = eventSpecial;
+    }
+
     public boolean isChefSpecial() {
         return chefSpecial;
     }

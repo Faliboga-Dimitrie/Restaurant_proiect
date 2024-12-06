@@ -22,8 +22,18 @@ public class MenuItem extends Ingredient{
         isAvailable = false;
     }
 
-    public MenuItem(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable) {
+    public MenuItem(HashMap<String,Ingredient> ingredients, String name, String description, double price, int calories, boolean isAvailable) {
         this.ingredients = ingredients;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.calories = calories;
+        this.isAvailable = isAvailable;
+    }
+
+    public MenuItem(Ingredient ingredient, String name, String description, double price, int calories, boolean isAvailable) {
+        this.ingredients = new HashMap<>();
+        this.ingredients.put(ingredient.getName(),ingredient);
         this.name = name;
         this.description = description;
         this.price = price;

@@ -22,6 +22,13 @@ public class Drink extends MenuItem{
         this.volume = volume;
     }
 
+    public Drink(MenuItem menuItem, int quantity, boolean isAlcoholic, int volume) {
+        super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
+        this.quantity = quantity;
+        this.isAlcoholic = isAlcoholic;
+        this.volume = volume;
+    }
+
     public int getQuantity() {
         return quantity;
     }

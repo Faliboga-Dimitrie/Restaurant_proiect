@@ -28,6 +28,15 @@ public class FoodItem extends MenuItem{
         this.isSideDish = isSideDish;
     }
 
+    public FoodItem(MenuItem menuItem, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
+        super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
+        this.cuisineType = cuisineType;
+        this.isAppetizer = isAppetizer;
+        this.isMainCourse = isMainCourse;
+        this.isDessert = isDessert;
+        this.isSideDish = isSideDish;
+    }
+
     public String getCuisineType() {
         return cuisineType;
     }

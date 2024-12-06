@@ -90,7 +90,7 @@ public class Menu {
                     interogateUser();
                     item.modifyIngredients((Ingredient) newValue,toAdd,toIngredient,item.findIngredientByName(((Ingredient) newValue).getName()));
                 } else {
-                    throw new IllegalArgumentException("Invalid value type for CATEGORY. Expected String.");
+                    throw new IllegalArgumentException("Invalid value type for INGREDIENTS. Expected Ingredient.");
                 }
                 break;
             case DESCRIPTION:
@@ -104,5 +104,4 @@ public class Menu {
                 throw new UnsupportedOperationException("Unsupported update type: " + updateType);
         }
     }
-
 }
