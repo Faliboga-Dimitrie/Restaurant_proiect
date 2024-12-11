@@ -1,40 +1,136 @@
 package org.example.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.example.enums.MenuUpdateType;
+import org.example.enums.MenuItemType;
 import java.util.Scanner;
 
 public class Menu {
-    private HashMap<String,MenuItem> menuItems;
+    private ArrayList<Drink> drinks;
+    private ArrayList<Food> foods;
+    private ArrayList<Special> specials;
+    private final HashMap<String, Integer> drinksByName = new HashMap<>();
+    private final HashMap<String, Integer> foodsByName = new HashMap<>();
+    private final HashMap<String, Integer> specialsByName = new HashMap<>();
+    private final HashMap<Double, Integer> drinksByPrice = new HashMap<>();
+    private final HashMap<Double, Integer> foodsByPrice = new HashMap<>();
+    private final HashMap<Double, Integer> specialsByPrice = new HashMap<>();
+    private final HashMap<Integer, Integer> drinksByCalories = new HashMap<>();
+    private final HashMap<Integer, Integer> foodsByCalories = new HashMap<>();
+    private final HashMap<Integer, Integer> specialsByCalories = new HashMap<>();
     private boolean toAdd = false;
     private boolean toIngredient = false;
 
-    public Menu() {
-        menuItems = new HashMap<>();
+    public Menu() {}
+
+    public Menu(ArrayList<Drink> drinks, ArrayList<Food> foods, ArrayList<Special> specials) {
+        this.drinks = drinks;
+        this.foods = foods;
+        this.specials = specials;
+
+        for (int i = 0; i < drinks.size(); i++) {
+            drinksByName.put(drinks.get(i).getName(),i);
+            drinksByPrice.put(drinks.get(i).getPrice(),i);
+            drinksByCalories.put(drinks.get(i).getCalories(),i);
+        }
+        for (int i = 0; i < foods.size(); i++) {
+            foodsByName.put(foods.get(i).getName(),i);
+            foodsByPrice.put(foods.get(i).getPrice(),i);
+            foodsByCalories.put(foods.get(i).getCalories(),i);
+        }
+        for (int i = 0; i < specials.size(); i++) {
+            specialsByName.put(specials.get(i).getName(), i);
+            specialsByPrice.put(specials.get(i).getPrice(), i);
+            specialsByCalories.put(specials.get(i).getCalories(), i);
+        }
     }
 
-    public Menu(HashMap<String,MenuItem> menuItems) {
-        this.menuItems = menuItems;
+    public void addDrink(Drink drink) {
+        drinks.add(drink);
+        drinksByName.put(drink.getName(),drinks.size()-1);
+        drinksByPrice.put(drink.getPrice(),drinks.size()-1);
+        drinksByCalories.put(drink.getCalories(),drinks.size()-1);
     }
 
-    public HashMap<String,MenuItem> getMenuItems() {
-        return menuItems;
+    public void addFood(Food food) {
+        foods.add(food);
+        foodsByName.put(food.getName(),foods.size()-1);
+        foodsByPrice.put(food.getPrice(),foods.size()-1);
+        foodsByCalories.put(food.getCalories(),foods.size()-1);
     }
 
-    public void setMenuItems(HashMap<String,MenuItem> menuItems) {
-        this.menuItems = menuItems;
+    public void addSpecial(Special special) {
+        specials.add(special);
+        specialsByName.put(special.getName(),specials.size()-1);
+        specialsByPrice.put(special.getPrice(),specials.size()-1);
+        specialsByCalories.put(special.getCalories(),specials.size()-1);
     }
 
-    public void addMenuItem(MenuItem menuItem) {
-        menuItems.put(menuItem.getName(), menuItem);
+    public void removeDrink(Drink drink) {
+        drinks.remove(drink);
+        drinksByName.remove(drink.getName());
+        drinksByPrice.remove(drink.getPrice());
+        drinksByCalories.remove(drink.getCalories());
     }
 
-    public void removeMenuItem(MenuItem menuItem) {
-        menuItems.remove(menuItem);
+    public void removeFood(Food food) {
+        foods.remove(food);
+        foodsByName.remove(food.getName());
+        foodsByPrice.remove(food.getPrice());
+        foodsByCalories.remove(food.getCalories());
     }
 
-    public MenuItem findItemByName(String menuItemName) {
-        return menuItems.get(menuItemName);
+    public void removeSpecial(Special special) {
+        specials.remove(special);
+        specialsByName.remove(special.getName());
+        specialsByPrice.remove(special.getPrice());
+        specialsByCalories.remove(special.getCalories());
+    }
+
+    public Drink findDrinkByName(String name) {
+        Integer index = drinksByName.get(name);
+        return index != null ? drinks.get(index) : null;
+    }
+
+    public Food findFoodByName(String name) {
+        Integer index = foodsByName.get(name);
+        return index != null ? foods.get(index) : null;
+    }
+
+    public Special findSpecialByName(String name) {
+        Integer index = specialsByName.get(name);
+        return index != null ? specials.get(index) : null;
+    }
+
+    public Drink findDrinkByPrice(double price) {
+        Integer index = drinksByPrice.get(price);
+        return index != null ? drinks.get(index) : null;
+    }
+
+    public Food findFoodByPrice(double price) {
+        Integer index = foodsByPrice.get(price);
+        return index != null ? foods.get(index) : null;
+    }
+
+    public Special findSpecialByPrice(double price) {
+        Integer index = specialsByPrice.get(price);
+        return index != null ? specials.get(index) : null;
+    }
+
+    public Drink findDrinkByCalories(int calories) {
+        Integer index = drinksByCalories.get(calories);
+        return index != null ? drinks.get(index) : null;
+    }
+
+    public Food findFoodByCalories(int calories) {
+        Integer index = foodsByCalories.get(calories);
+        return index != null ? foods.get(index) : null;
+    }
+
+    public Special findSpecialByCalories(int calories) {
+        Integer index = specialsByCalories.get(calories);
+        return index != null ? specials.get(index) : null;
     }
 
     private void interogateUser() {
@@ -62,9 +158,39 @@ public class Menu {
             }
         }
     }
-    public <T> void updateMenuItem(String itemName, MenuUpdateType updateType, T newValue) {
-        MenuItem item = findItemByName(itemName);
 
+    private MenuItem findMenuItemByNameAndType(String name, MenuItemType type) {
+        switch (type) {
+            case DRINK -> {
+                return findDrinkByName(name);
+            }
+            case FOOD -> {
+                return findFoodByName(name);
+            }
+            case SPECIAL -> {
+                return findSpecialByName(name);
+            }
+            default -> throw new UnsupportedOperationException("Unsupported menu item type: " + type);
+
+        }
+    }
+
+    public <T> void updateMenuItem(String itemName, MenuUpdateType updateType, MenuItemType type, T newValue) {
+        MenuItem item = findMenuItemByNameAndType(itemName, type);
+
+        if (item == null) {
+            System.out.println(type + " not found.");
+            return;
+        }
+
+        try {
+            updateMenuItem(item, updateType, newValue);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private <T extends MenuItem> void updateMenuItem(T item, MenuUpdateType updateType, Object newValue) {
         if (item == null) {
             System.out.println("Item not found.");
             return;
@@ -86,9 +212,9 @@ public class Menu {
                 }
                 break;
             case INGREDIENTS:
-                if (newValue instanceof Ingredient) {
+                if (newValue instanceof Ingredient ingredient) {
                     interogateUser();
-                    item.modifyIngredients((Ingredient) newValue,toAdd,toIngredient,item.findIngredientByName(((Ingredient) newValue).getName()));
+                    item.modifyIngredients(ingredient, toAdd, toIngredient, item.findIngredientByName(ingredient.getName()));
                 } else {
                     throw new IllegalArgumentException("Invalid value type for INGREDIENTS. Expected Ingredient.");
                 }
@@ -105,3 +231,4 @@ public class Menu {
         }
     }
 }
+

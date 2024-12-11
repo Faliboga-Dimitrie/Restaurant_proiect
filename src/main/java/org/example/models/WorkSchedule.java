@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkSchedule {
-    private Map<DayOfWeek, WorkDay> schedule;
+    private final Map<DayOfWeek, WorkDay> schedule = new HashMap<>();
 
-    public WorkSchedule() {
-        schedule = new HashMap<>();
-    }
+    public WorkSchedule() {}
 
     public void addWorkDay(DayOfWeek day, int startHour, int endHour, int breakStart, int breakEnd) {
         schedule.put(day, new WorkDay(startHour, endHour, breakStart, breakEnd));

@@ -1,6 +1,5 @@
 package org.example.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Special extends MenuItem{

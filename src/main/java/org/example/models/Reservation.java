@@ -1,8 +1,10 @@
 package org.example.models;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Reservation {
+    private final String reservationId;
     private String fullName;
     private String phoneNumber;
     private String email;
@@ -12,9 +14,11 @@ public class Reservation {
     private String status;
     private boolean isPaid;
     private String paymentMethod;
+    private String tableId;
 
     public Reservation(String fullName, String phoneNumber, String email, LocalDateTime reservationDateTime,
                        int numberOfPeople, String specialRequests) {
+        this.reservationId = UUID.randomUUID().toString();
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -102,6 +106,18 @@ public class Reservation {
     public String toString() {
         return "Rezervare: " + fullName + " (" + numberOfPeople + " persoane) - " + reservationDateTime +
                 "\nStatus: " + status + "\nCerinte speciale: " + (specialRequests.isEmpty() ? "N/A" : specialRequests);
+    }
+
+    public String getReservationId() {
+        return reservationId;
+    }
+
+    public String getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
     }
 }
 

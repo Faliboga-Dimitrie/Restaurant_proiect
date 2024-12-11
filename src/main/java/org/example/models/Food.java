@@ -1,16 +1,15 @@
 package org.example.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FoodItem extends MenuItem{
+public class Food extends MenuItem{
     private String cuisineType;
     private boolean isAppetizer;
     private boolean isMainCourse;
     private boolean isDessert;
     private boolean isSideDish;
 
-    public FoodItem() {
+    public Food() {
         super();
         cuisineType = "";
         isAppetizer = false;
@@ -19,7 +18,7 @@ public class FoodItem extends MenuItem{
         isSideDish = false;
     }
 
-    public FoodItem(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
+    public Food(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
         super(ingredients, name, description, price, calories, isAvailable);
         this.cuisineType = cuisineType;
         this.isAppetizer = isAppetizer;
@@ -28,7 +27,7 @@ public class FoodItem extends MenuItem{
         this.isSideDish = isSideDish;
     }
 
-    public FoodItem(MenuItem menuItem, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
+    public Food(MenuItem menuItem, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
         super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
         this.cuisineType = cuisineType;
         this.isAppetizer = isAppetizer;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import org.example.enums.IngredientUpdateType;
 import java.util.Scanner;
 
-public class MenuItem extends Ingredient{
+public class MenuItem   {
     protected HashMap<String,Ingredient> ingredients;
     protected String name;
     protected String description;
@@ -124,7 +124,7 @@ public class MenuItem extends Ingredient{
                 ingredients.put(ingredient.getName(),ingredient);
             }
             else {
-                ingredients.remove(myIngredient);
+                    ingredients.remove(myIngredient.getName());
             }
         }
         else {
