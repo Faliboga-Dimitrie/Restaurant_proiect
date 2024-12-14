@@ -91,7 +91,7 @@ public class Restaurant {
             return;
         }
         else {
-            int tableIndex = tablesByStatus.get("liber").getFirst();
+            int tableIndex = tablesByStatus.get("liber").get(0);
             if(tables.get(tableIndex).reserve()){
                 newReservation.setTableId(tables.get(tableIndex).getTableId());
             }
