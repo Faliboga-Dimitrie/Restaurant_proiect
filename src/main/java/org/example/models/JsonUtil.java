@@ -1,11 +1,13 @@
 package org.example.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 public class JsonUtil {
 
@@ -93,6 +95,42 @@ public class JsonUtil {
             mapper.writeValue(file, items);
 
             System.out.println("Elementul a fost eliminat (dacă a existat) din fișierul " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T> void updateElementInJson(
+            String fileName,
+            Class<T> clazz,
+            Predicate<T> condition,
+            Consumer<T> updater) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File(fileName);
+
+        try {
+            // 1. Citește lista de obiecte din JSON
+            List<T> items = mapper.readValue(file, new TypeReference<List<T>>() {});
+
+            // 2. Găsește obiectul și aplică modificările
+            boolean updated = false;
+            for (T item : items) {
+                if (condition.test(item)) {
+                    updater.accept(item);
+                    updated = true;
+                    break; // Ieșim dacă am găsit obiectul de modificat
+                }
+            }
+
+            // 3. Salvează lista actualizată în JSON
+            if (updated) {
+                mapper.writeValue(file, items);
+                System.out.println("Element updated successfully!");
+            } else {
+                System.out.println("No element matching the condition was found.");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

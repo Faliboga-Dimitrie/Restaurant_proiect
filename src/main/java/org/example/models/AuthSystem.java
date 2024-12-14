@@ -6,6 +6,7 @@ import org.example.enums.Role;
 
 public class AuthSystem {
     private final Map<String, User> users = new HashMap<>();
+    private User currentUser;
 
     public AuthSystem() {}
 
@@ -40,9 +41,43 @@ public class AuthSystem {
         return users;
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
     public boolean isAdmin(String username) {
         User user = users.get(username);
         return user != null && user.getRole() == Role.ADMIN;
+    }
+
+    public void updateUsername(String oldUsername, String newUsername) {
+        User user = users.get(oldUsername);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found!");
+        }
+        users.remove(oldUsername);
+        user.setUsername(newUsername);
+        users.put(newUsername, user);
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        User user = users.get(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found!");
+        }
+        user.setPassword(newPassword);
+    }
+
+    public void updateRole(String username, Role newRole) {
+        User user = users.get(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found!");
+        }
+        user.setRole(newRole);
     }
 }
 

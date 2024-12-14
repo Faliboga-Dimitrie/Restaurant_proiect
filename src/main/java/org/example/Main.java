@@ -5,8 +5,7 @@ import org.example.models.Restaurant;
 import org.example.models.User;
 import org.example.models.JsonUtil;
 import org.example.models.AuthData;
-import org.example.enums.Role;
-import org.example.enums.Interogationoptions;
+import org.example.enums.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -173,6 +172,7 @@ public class Main {
                             authSystem.register(authDataRegister.getUsername(), authDataRegister.getPassword(), Role.CLIENT);
                             users.add(new User(authDataRegister.getUsername(), authDataRegister.getPassword(), Role.CLIENT));
                             System.out.println("User added successfully!");
+                            return true;
                         }
                         return false;
 
@@ -183,6 +183,7 @@ public class Main {
                         if (currentUser != null) {
                             System.out.println("User authenticated successfully!");
                             System.out.println("Logged in as: " + currentUser.getRole());
+                            authSystem.setCurrentUser(currentUser);
                             return true;
                         } else {
                             System.out.println("Invalid username or password!");
@@ -202,133 +203,399 @@ public class Main {
         }
     }
 
-//    public static void clientMainOptionsDisplay() {
-//        System.out.println("Please choose an option:");
-//        System.out.println("1. View menu");
-//        System.out.println("2. View orders");
-//        System.out.println("3. Exit");
-//    }
-//
-//    public static void staffMainOptionsDisplay() {
-//        System.out.println("Please choose an option:");
-//        System.out.println("1. View menu");
-//        System.out.println("2. View orders");
-//        System.out.println("3. Add order");
-//        System.out.println("4. Exit");
-//    }
-//
-//    public static void adminMainOptionsDisplay() {
-//        System.out.println("Please choose an option:");
-//        System.out.println("1. View menu");
-//        System.out.println("2. View orders");
-//        System.out.println("3. Add order");
-//        System.out.println("4. Add menu item");
-//        System.out.println("5. Remove menu item");
-//        System.out.println("6. Exit");
-//    }
-//
-//    public static void mainConsoleIO(Role role, Restaurant restaurant) {
-//        Scanner scanner = new Scanner(System.in);
-//        int option = 0;
-//        do {
-//            switch (role) {
-//                case CLIENT:
-//                    System.out.println("Please choose an option:");
-//                    System.out.println("1. View menu");
-//                    System.out.println("2. View orders");
-//                    System.out.println("3. Exit");
-//                    option = asureOption();
-//                    switch (option) {
-//                        case 1:
-//                            restaurant.getMenu().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 2:
-//                            restaurant.getOrders().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 3:
-//                            System.out.println("Exiting...");
-//                            return;
-//                        default:
-//                            System.out.println("Invalid option!");
-//                            break;
-//                    }
-//                    break;
-//                case STAFF:
-//                    System.out.println("Please choose an option:");
-//                    System.out.println("1. View menu");
-//                    System.out.println("2. View orders");
-//                    System.out.println("3. Add order");
-//                    System.out.println("4. Exit");
-//                    option = asureOption();
-//                    switch (option) {
-//                        case 1:
-//                            restaurant.getMenu().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 2:
-//                            restaurant.getOrders().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 3:
-//                            System.out.println("Enter the order:");
-//                            String order = scanner.nextLine();
-//                            restaurant.addOrder(order);
-//                            System.out.println("Order added successfully!");
-//                            break;
-//                        case 4:
-//                            System.out.println("Exiting...");
-//                            return;
-//                        default:
-//                            System.out.println("Invalid option!");
-//                            break;
-//                    }
-//                    break;
-//                case ADMIN:
-//                    System.out.println("Please choose an option:");
-//                    System.out.println("1. View menu");
-//                    System.out.println("2. View orders");
-//                    System.out.println("3. Add order");
-//                    System.out.println("4. Add menu item");
-//                    System.out.println("5. Remove menu item");
-//                    System.out.println("6. Exit");
-//                    option = asureOption();
-//                    switch (option) {
-//                        case 1:
-//                            restaurant.getMenu().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 2:
-//                            restaurant.getOrders().forEach((key, value) -> System.out.println(value));
-//                            break;
-//                        case 3:
-//                            System.out.println("Enter the order:");
-//                            String order = scanner.nextLine();
-//                            restaurant.addOrder(order);
-//                            System.out.println("Order added successfully!");
-//                            break;
-//                        case 4:
-//                            System.out.println("Enter the menu item:");
-//                            String menuItem = scanner.nextLine();
-//                            restaurant.addMenuItem(menuItem);
-//                            System.out.println("Menu item added successfully!");
-//                            break;
-//                        case 5:
-//                            System.out.println("Enter the menu item:");
-//                            String menuItemToRemove = scanner.nextLine();
-//                            restaurant.removeMenuItem(menuItemToRemove);
-//                            System.out.println("Menu item removed successfully!");
-//                            break;
-//                        case 6:
-//                            System.out.println("Exiting...");
-//                            return;
-//                        default:
-//                            System.out.println("Invalid option!");
-//                            break;
-//                    }
-//                    break;
-//                default:
-//                    System.out.println("Invalid role!");
-//                    break;
-//            }
-//        }while (true);
-//    }
+    public static <E extends Enum<E>> void displayEnumOptions(Class<E> enumClass) {
+        System.out.println("Please choose an option:");
+        int index = 1;
+        for (E option : enumClass.getEnumConstants()) {
+            System.out.println(index + ". " + option);
+            index++;
+        }
+    }
+
+    public static void WaiterOptions(Restaurant restaurant){
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            WaiterOptions[] waiterOptions = WaiterOptions.values();
+            displayEnumOptions(WaiterOptions.class);
+            option = asureOption();
+            try{
+                WaiterOptions waiterOption = waiterOptions[option - 1];
+                switch (waiterOption){
+                    case VIEW_RESERVATIONS:
+                        break;
+                    case VIEW_ORDERS:
+                        break;
+                    case DELIVER_ORDER:
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void modifyMenuOptions(Restaurant restaurant) {
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            ModifyMenu[] modifyMenus = ModifyMenu.values();
+            displayEnumOptions(ModifyMenu.class);
+            option = asureOption();
+            try{
+                ModifyMenu modifyMenu = modifyMenus[option - 1];
+                switch (modifyMenu){
+                    case ADD_ITEM:
+                        System.out.println("Enter the name of the item:");
+                        String name = scanner.nextLine();
+                        System.out.println("Enter the price of the item:");
+                        double price = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.println("Item added successfully!");
+                        break;
+                    case REMOVE_ITEM:
+                        System.out.println("Enter the name of the item you want to remove:");
+                        String itemName = scanner.nextLine();
+                        System.out.println("Item removed successfully!");
+                        break;
+                    case UPDATE_ITEM:
+                        System.out.println("Enter the name of the item you want to update:");
+                        String itemNameUpdate = scanner.nextLine();
+                        System.out.println("Enter the new name of the item:");
+                        String newName = scanner.nextLine();
+                        System.out.println("Enter the new price of the item:");
+                        double newPrice = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.println("Item updated successfully!");
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void ChefOptions(Restaurant restaurant){
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            ChefOptions[] chefOptions = ChefOptions.values();
+            displayEnumOptions(ChefOptions.class);
+            option = asureOption();
+            try{
+                ChefOptions chefOption = chefOptions[option - 1];
+                switch (chefOption){
+                    case VIEW_ORDERS:
+                        break;
+                    case PREPARE_ORDER:
+                        break;
+                    case UPDATE_MENU:
+                         modifyMenuOptions(restaurant);
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void modifyStaffOptions(AuthSystem authSystem) {
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        ArrayList<User> users = new ArrayList<>();
+        do {
+            ModifyStaff[] modifyStaffs = ModifyStaff.values();
+            displayEnumOptions(ModifyStaff.class);
+            option = asureOption();
+            try{
+                ModifyStaff modifyStaff = modifyStaffs[option - 1];
+                switch (modifyStaff){
+                    case ADD_STAFF:
+                        AuthData authData = new AuthData();
+                        authOptions(Interogationoptions.REGISTER, authData,true);
+                        authSystem.register(authData.getUsername(), authData.getPassword(), authData.getRole());
+                        users.add(new User(authData.getUsername(), authData.getPassword(), authData.getRole()));
+                        JsonUtil.appendToJson(users, "users.json", User.class);
+                        System.out.println("Staff added successfully!");
+                        break;
+                    case REMOVE_STAFF:
+                        System.out.println("Enter the username of the staff you want to remove:");
+                        String username = scanner.nextLine();
+                        authSystem.removeUser(username);
+                        JsonUtil.removeFromJson("users.json", User.class, item -> item.getUsername().equals(username));
+                        System.out.println("Staff removed successfully!");
+                        break;
+                    case UPDATE_STAFF:
+                        System.out.println("Enter the username of the staff you want to update:");
+                        String usernameUpdate = scanner.nextLine();
+                        System.out.println("Enter the new username of the staff:");
+                        String newUsername = scanner.nextLine();
+                        System.out.println("Enter the new password of the staff:");
+                        String newPassword = scanner.nextLine();
+                        System.out.println("Enter the new role of the staff:");
+                        for (int i = 0; i < Role.values().length - 1; i++) {
+                            System.out.println((i + 1) + ". " + Role.values()[i]);
+                        }
+                        int roleOption = scanner.nextInt();
+                        scanner.nextLine();
+                        authSystem.updateUsername(usernameUpdate, newUsername);
+                        authSystem.updatePassword(newUsername, newPassword);
+                        authSystem.updateRole(newUsername, Role.values()[roleOption - 1]);
+                        JsonUtil.updateElementInJson("users.json", User.class, item -> item.getUsername().equals(usernameUpdate), item -> {
+                            item.setUsername(newUsername);
+                            item.setPassword(newPassword);
+                            item.setRole(Role.values()[roleOption - 1]);
+                        });
+                        System.out.println("Staff updated successfully!");
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void modifyStaffOptions(Restaurant restaurant){
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            ModifyStaff[] modifyStaffs = ModifyStaff.values();
+            displayEnumOptions(ModifyStaff.class);
+            option = asureOption();
+            try{
+                ModifyStaff modifyStaff = modifyStaffs[option - 1];
+                switch (modifyStaff){
+                    case ADD_STAFF:
+                        System.out.println("Enter the username of the staff:");
+                        String username = scanner.nextLine();
+                        System.out.println("Staff added successfully!");
+                        break;
+                    case REMOVE_STAFF:
+                        System.out.println("Enter the username of the staff you want to remove:");
+                        String staffUsername = scanner.nextLine();
+                        System.out.println("Staff removed successfully!");
+                        break;
+                    case UPDATE_STAFF:
+                        System.out.println("Enter the username of the staff you want to update:");
+                        String staffUsernameUpdate = scanner.nextLine();
+                        System.out.println("Enter the new username of the staff:");
+                        String newStaffUsername = scanner.nextLine();
+                        System.out.println("Staff updated successfully!");
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void modifyRestaurantOptions(Restaurant restaurant) {
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            ModifyRestaurant[] modifyRestaurants = ModifyRestaurant.values();
+            displayEnumOptions(ModifyRestaurant.class);
+            option = asureOption();
+            try{
+                ModifyRestaurant modifyRestaurant = modifyRestaurants[option - 1];
+                switch (modifyRestaurant){
+                    case ADD_TABLE:
+                        System.out.println("Enter the number of the table:");
+                        int number = scanner.nextInt();
+                        scanner.nextLine();
+                        restaurant.addTable(number, "liber");
+                        System.out.println("Table added successfully!");
+                        break;
+                    case REMOVE_TABLE:
+                        System.out.println("Enter the number of the table you want to remove:");
+                        int tableNumber = scanner.nextInt();
+                        scanner.nextLine();
+                        restaurant.removeTable(tableNumber);
+                        System.out.println("Table removed successfully!");
+                        break;
+                    case UPDATE_TABLE:
+                        System.out.println("Enter the number of the table you want to update:");
+                        int tableNumberUpdate = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Enter the new number of seats to the table:");
+                        int newSeatsNumber = scanner.nextInt();
+                        scanner.nextLine();
+                        restaurant.updateTable(tableNumberUpdate, newSeatsNumber, "liber");
+                        System.out.println("Table updated successfully!");
+                        break;
+                    case ADD_STAFF:
+                        System.out.println("Enter the username of the staff:");
+                        String username = scanner.nextLine();
+                        System.out.println("Staff added successfully!");
+                        break;
+                    case REMOVE_STAFF:
+                        System.out.println("Enter the username of the staff you want to remove:");
+                        String staffUsername = scanner.nextLine();
+                        System.out.println("Staff removed successfully!");
+                        break;
+                    case UPDATE_STAFF:
+                        System.out.println("Enter the username of the staff you want to update:");
+                        String staffUsernameUpdate = scanner.nextLine();
+                        System.out.println("Enter the new username of the staff:");
+                        String newStaffUsername = scanner.nextLine();
+                        System.out.println("Staff updated successfully!");
+                        break;
+                    case ADD_MENU_ITEM:
+                        System.out.println("Enter the name of the item:");
+                        String name = scanner.nextLine();
+                        System.out.println("Enter the price of the item:");
+                        double price = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.println("Menu item added successfully!");
+                        break;
+                    case REMOVE_MENU:
+                        System.out.println("Enter the name of the item you want to remove:");
+                        String itemName = scanner.nextLine();
+                        System.out.println("Menu item removed successfully!");
+                        break;
+                    case UPDATE_MENU:
+                        System.out.println("Enter the name of the item you want to update:");
+                        String itemNameUpdate = scanner.nextLine();
+                        System.out.println("Enter the new name of the item:");
+                        String newName = scanner.nextLine();
+                        System.out.println("Enter the new price of the item:");
+                        double newPrice = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.println("Menu item updated successfully!");
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void mainConsoleIO(Role role, Restaurant restaurant, AuthSystem authSystem) {
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        do {
+            switch (role) {
+                case CLIENT:
+                    displayEnumOptions(ClientOptions.class);
+                    option = asureOption();
+                    try{
+                        ClientOptions clientOptions = ClientOptions.values()[option - 1];
+                        switch (clientOptions){
+                            case MAKE_RESERVATION:
+                                break;
+                            case UPDATE_RESERVATION:
+                                break;
+                            case CANCEL_RESERVATION:
+                                break;
+                            case VIEW_MENU:
+                                restaurant.getMenu().displayMenu();
+                                break;
+                            case MAKE_ORDER:
+                                break;
+                            case VIEW_ORDERS:
+                                break;
+                            case CANCEL_ORDER:
+                                break;
+                            case EXIT:
+                                System.out.println("Exiting...");
+                                return;
+                        }
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        System.out.println("Invalid option!");
+                        break;
+                    }
+
+                    break;
+                case STAFF:
+                    displayEnumOptions(StaffOptions.class);
+                    option = asureOption();
+                    try{
+                        StaffOptions staffOptions = StaffOptions.values()[option - 1];
+                        switch (staffOptions){
+                            case WAITER:
+                                WaiterOptions(restaurant);
+                                break;
+                            case CHEF:
+                                ChefOptions(restaurant);
+                                break;
+                            case EXIT:
+                                System.out.println("Exiting...");
+                                return;
+                        }
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        System.out.println("Invalid option!");
+                        break;
+                    }
+                    break;
+                case ADMIN:
+                    displayEnumOptions(AdminOptions.class);
+                    option = asureOption();
+                    try{
+                        AdminOptions adminOptions = AdminOptions.values()[option - 1];
+                        switch (adminOptions){
+                            case MODIFY_MENU:
+                                modifyMenuOptions(restaurant);
+                                break;
+                            case MODIFY_STAFF:
+                                modifyStaffOptions(authSystem);
+                                modifyStaffOptions(restaurant);
+                                break;
+                            case MODIFY_RESTAURANT:
+                                modifyRestaurantOptions(restaurant);
+                                break;
+                            case VIEW_ALL_RESERVATIONS:
+                                restaurant.getReservations().forEach((item) -> System.out.println(item));
+                                break;
+                            case VIEW_ALL_ORDERS:
+                                break;
+                            case EXIT:
+                                System.out.println("Exiting...");
+                                return;
+                        }
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        System.out.println("Invalid option!");
+                        break;
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid role!");
+                    break;
+            }
+        }while (true);
+    }
 
     public static void main(String[] args) {
         Restaurant restaurant = new Restaurant();
@@ -339,6 +606,10 @@ public class Main {
         }
         while (!beginConsoleIO(authSystem)) {
            beginConsoleIO(authSystem);
+        }
+
+        if (authSystem.getCurrentUser() != null) {
+            mainConsoleIO(authSystem.getCurrentUser().getRole(), restaurant, authSystem);
         }
     }
 }

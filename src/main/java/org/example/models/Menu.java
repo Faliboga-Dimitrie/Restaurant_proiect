@@ -230,5 +230,20 @@ public class Menu {
                 throw new UnsupportedOperationException("Unsupported update type: " + updateType);
         }
     }
+
+    public void displayMenu() {
+        System.out.println("Drinks:");
+        for (Drink drink : drinks) {
+            System.out.println(drink);
+        }
+        System.out.println("Foods:");
+        for (Food food : foods) {
+            System.out.println(food);
+        }
+        System.out.println("Specials:");
+        for (Special special : specials) {
+            System.out.println(special);
+        }
+    }
 }
 

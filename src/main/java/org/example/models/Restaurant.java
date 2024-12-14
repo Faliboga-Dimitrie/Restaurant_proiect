@@ -75,6 +75,10 @@ public class Restaurant {
         this.restaurantData = restaurantData;
     }
 
+    public ArrayList<Reservation> getReservations() {
+        return reservations;
+    }
+
     public void MakeReservation(String fullName, String phoneNumber, String email, LocalDateTime reservationDateTime,
                                 int numberOfPeople, String specialRequests){
         Reservation newReservation = new Reservation(fullName,phoneNumber,email,reservationDateTime,numberOfPeople,specialRequests);
@@ -116,4 +120,59 @@ public class Restaurant {
         reservationByPersonName.remove(fullName);
         reservationByDateTime.remove(reservationDateTime);
     }
+
+    public void UpdateReservation(String fullName, String phoneNumber, String email, LocalDateTime reservationDateTime,
+                                  int numberOfPeople, String specialRequests){
+        if(!reservationByPersonName.containsKey(fullName)){
+            System.out.println("Rezervarea nu a putut fi actualizată. O rezervare cu acest nume nu există.");
+            return;
+        }
+        int reservationIndex = reservationByPersonName.get(fullName);
+        LocalDateTime oldReservationDateTime = reservations.get(reservationIndex).getReservationDateTime();
+        int tableIndex = Integer.parseInt(tables.get(tablesByID.get(Integer.parseInt(reservations.get(reservationIndex).getTableId()))).getTableId());
+        tables.get(tableIndex).free();
+        reservations.get(reservationIndex).setFullName(fullName);
+        reservations.get(reservationIndex).setPhoneNumber(phoneNumber);
+        reservations.get(reservationIndex).setEmail(email);
+        reservations.get(reservationIndex).setReservationDateTime(reservationDateTime);
+        reservations.get(reservationIndex).setNumberOfPeople(numberOfPeople);
+        reservations.get(reservationIndex).setSpecialRequests(specialRequests);
+        if(reservationByDateTime.containsKey(reservationDateTime)){
+            System.out.println("Rezervarea nu a putut fi actualizată. O rezervare la această dată și oră există deja.");
+            return;
+        }
+        reservations.get(reservationIndex).setTableId(tables.get(tableIndex).getTableId());
+        reservationByDateTime.remove(oldReservationDateTime);
+        reservationByDateTime.put(reservationDateTime,reservationIndex);
+    }
+
+    public void addTable(int numberOfSeats, String status){}
+
+    public void removeTable(int tableId){
+        if(!tablesByID.containsKey(tableId)){
+            System.out.println("Masa nu a putut fi ștearsă. Masa cu acest ID nu există.");
+            return;
+        }
+        int tableIndex = tablesByID.get(tableId);
+        if(tables.get(tableIndex).getStatus().equals("ocupat")){
+            System.out.println("Masa nu a putut fi ștearsă. Masa este ocupată.");
+            return;
+        }
+        tables.remove(tableIndex);
+        tablesByID.remove(tableId);
+        tablesByCapacity.get(tables.get(tableIndex).getNumberOfSeats()).remove(tableIndex);
+        tablesByStatus.get(tables.get(tableIndex).getStatus()).remove(tableIndex);
+    }
+
+    public void updateTable(int tableId, int numberOfSeats, String status){}
+
+    public void addStaff(String name, String surname, int age, String email, String phoneNumber, LocalDateTime dateOfBirth,
+                         String role, double salary, LocalDateTime hireDate, WorkSchedule workSchedule){}
+
+    public void removeStaff(int staffId){}
+
+    public void updateStaff(int staffId, String name, String surname, int age, String email, String phoneNumber, LocalDateTime dateOfBirth,
+                            String role, double salary, LocalDateTime hireDate, WorkSchedule workSchedule){}
+
+
 }

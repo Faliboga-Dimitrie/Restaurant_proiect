@@ -3,9 +3,9 @@ package org.example.models;
 import org.example.enums.Role;
 
 public class User {
-    private final String username;
-    private final String password;
-    private final Role role;
+    private String username;
+    private String password;
+    private Role role;
 
     public User(String username, String password, Role role) {
         this.username = username;
@@ -34,6 +34,18 @@ public class User {
     @Override
     public String toString() {
         return "User{username='" + username + "', role=" + role + "}";
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
 
