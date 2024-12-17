@@ -9,12 +9,6 @@ public class AuthData {
 
     public AuthData() {}
 
-    public AuthData(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
     public String getUsername() {
         return username;
     }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Main {
     public static void loginStartScreen() {
@@ -156,8 +158,7 @@ public class Main {
     }
 
     public static boolean adminUser(){
-        Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        int option;
         System.out.println("Are you and admin or other?");
         System.out.println("1. Admin");
         System.out.println("2. Other");
@@ -166,10 +167,9 @@ public class Main {
     }
 
     public static boolean beginConsoleIO(AuthSystem authSystem) {
-        Scanner scanner = new Scanner(System.in);
         ArrayList<User> users = new ArrayList<>();
         User currentUser = null;
-        int option = 0;
+        int option;
         boolean selectedAdmin;
 
         loginStartScreen();
@@ -248,7 +248,7 @@ public class Main {
     public static HashMap<String,Ingredient> setIngredientList(){
         Scanner scanner = new Scanner(System.in);
         HashMap<String,Ingredient> ingredients = new HashMap<>();
-        int option = 0;
+        int option;
         do {
             System.out.println("Please choose an option:");
             System.out.println("1. Add ingredient");
@@ -296,9 +296,29 @@ public class Main {
         return new MenuItem(ingredients, name, description, price, calories, isAvailable);
     }
 
+    public static Person populatePersonSubClass(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the name of the person:");
+        String name = scanner.nextLine();
+        System.out.println("Enter the surname of the person:");
+        String surname = scanner.nextLine();
+        System.out.println("Enter the age of the person:");
+        int age = assureIntOption();
+        System.out.println("Enter the phone number of the person:");
+        String phoneNumber = scanner.nextLine();
+        System.out.println("Enter the date of birth of the person:");
+        System.out.println("Year:");
+        int year = assureIntOption();
+        System.out.println("Month:");
+        int month = assureIntOption();
+        System.out.println("Day:");
+        int day = assureIntOption();
+        return new Person(name, surname, age, phoneNumber, LocalDate.of(year, month, day));
+    }
+
     public static void modifyMenuOptions(Restaurant restaurant) {
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        int option;
         do {
             ModifyMenu[] modifyMenus = ModifyMenu.values();
             displayEnumOptions(ModifyMenu.class);
@@ -390,7 +410,7 @@ public class Main {
 
     public static void modifyStaffOptions(AuthSystem authSystem) {
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        int option;
         ArrayList<User> users = new ArrayList<>();
         do {
             ModifyStaff[] modifyStaffs = ModifyStaff.values();
@@ -451,7 +471,7 @@ public class Main {
 
     public static void modifyStaffOptions(Restaurant restaurant){
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        int option;
         do {
             ModifyStaff[] modifyStaffs = ModifyStaff.values();
             displayEnumOptions(ModifyStaff.class);
@@ -460,21 +480,84 @@ public class Main {
                 ModifyStaff modifyStaff = modifyStaffs[option - 1];
                 switch (modifyStaff){
                     case ADD_STAFF:
-                        System.out.println("Enter the username of the staff:");
-                        String username = scanner.nextLine();
-                        System.out.println("Staff added successfully!");
+                        Person person = populatePersonSubClass();
+                        System.out.println("Enter the salary of the staff:");
+                        double salary = assureDoubleOption();
+                        System.out.println("Enter the hire date of the staff:");
+                        System.out.println("Year:");
+                        int year = assureIntOption();
+                        System.out.println("Month:");
+                        int month = assureIntOption();
+                        System.out.println("Day:");
+                        int day = assureIntOption();
+                        LocalDate hireDate = LocalDate.of(year, month, day);
+                        restaurant.getStaff().addEmployee(new Employee(person, salary, hireDate));
                         break;
                     case REMOVE_STAFF:
-                        System.out.println("Enter the username of the staff you want to remove:");
-                        String staffUsername = scanner.nextLine();
+                        System.out.println("Enter the name of the staff you want to update:");
+                        String staffName = scanner.nextLine();
+                        System.out.println("Enter the surname of the staff you want to update:");
+                        String staffSurname = scanner.nextLine();
+                        restaurant.getStaff().removeEmployee(staffName + staffSurname);
                         System.out.println("Staff removed successfully!");
                         break;
                     case UPDATE_STAFF:
-                        System.out.println("Enter the username of the staff you want to update:");
-                        String staffUsernameUpdate = scanner.nextLine();
-                        System.out.println("Enter the new username of the staff:");
-                        String newStaffUsername = scanner.nextLine();
-                        System.out.println("Staff updated successfully!");
+                        System.out.println("Enter the name of the staff you want to update:");
+                        String staffNameUpdate = scanner.nextLine();
+                        System.out.println("Enter the surname of the staff you want to update:");
+                        String staffSurnameUpdate = scanner.nextLine();
+                        displayEnumOptions(EmployeeUpdateType.class);
+                        int employeeUpdateTypeOption = assureIntOption();
+                        EmployeeUpdateType employeeUpdateType = EmployeeUpdateType.values()[employeeUpdateTypeOption - 1];
+                        switch (employeeUpdateType) {
+                            case NAME:
+                                System.out.println("Enter the new name of the staff:");
+                                String newName = scanner.nextLine();
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newName, EmployeeUpdateType.NAME);
+                                break;
+                            case SURNAME:
+                                System.out.println("Enter the new surname of the staff:");
+                                String newSurname = scanner.nextLine();
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newSurname, EmployeeUpdateType.SURNAME);
+                                break;
+                            case AGE:
+                                System.out.println("Enter the new age of the staff:");
+                                int newAge = assureIntOption();
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newAge, EmployeeUpdateType.AGE);
+                                break;
+                            case PHONE_NUMBER:
+                                System.out.println("Enter the new phone number of the staff:");
+                                String newPhoneNumber = scanner.nextLine();
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newPhoneNumber, EmployeeUpdateType.PHONE_NUMBER);
+                                break;
+                            case DATE_OF_BIRTH:
+                                System.out.println("Enter the new date of birth of the staff:");
+                                System.out.println("Year:");
+                                int newYear = assureIntOption();
+                                System.out.println("Month:");
+                                int newMonth = assureIntOption();
+                                System.out.println("Day:");
+                                int newDay = assureIntOption();
+                                LocalDate newDateOfBirth = LocalDate.of(newYear, newMonth, newDay);
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newDateOfBirth, EmployeeUpdateType.DATE_OF_BIRTH);
+                                break;
+                            case SALARY:
+                                System.out.println("Enter the new salary of the staff:");
+                                double newSalary = assureDoubleOption();
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newSalary, EmployeeUpdateType.SALARY);
+                                break;
+                            case HIRED_DATE:
+                                System.out.println("Enter the new hire date of the staff:");
+                                System.out.println("Year:");
+                                int newHireYear = assureIntOption();
+                                System.out.println("Month:");
+                                int newHireMonth = assureIntOption();
+                                System.out.println("Day:");
+                                int newHireDay = assureIntOption();
+                                LocalDate newHireDate = LocalDate.of(newHireYear, newHireMonth, newHireDay);
+                                restaurant.getStaff().updateEmployee(staffNameUpdate, staffSurnameUpdate, newHireDate, EmployeeUpdateType.HIRED_DATE);
+                                break;
+                        }
                         break;
                     case EXIT:
                         System.out.println("Exiting...");
@@ -488,9 +571,49 @@ public class Main {
         }while (true);
     }
 
-    public static void modifyRestaurantOptions(Restaurant restaurant) {
-        Scanner scanner = new Scanner(System.in);
-        int option = 0;
+    public static void modifyTableOptions(Restaurant restaurant){
+        int option;
+        do {
+            ModifyTable[] modifyTables = ModifyTable.values();
+            displayEnumOptions(ModifyTable.class);
+            option = assureIntOption();
+            try{
+                ModifyTable modifyTable = modifyTables[option - 1];
+                switch (modifyTable){
+                    case ADD_TABLE:
+                        System.out.println("Enter the number of seats of the table:");
+                        int seats = assureIntOption();
+                        restaurant.addTable(seats);
+                        break;
+                    case REMOVE_TABLE:
+                        System.out.println("Enter the number (id) of the table you want to remove:");
+                        int tableNumber = assureIntOption();
+                        restaurant.removeTable(tableNumber);
+                        break;
+                    case UPDATE_TABLE:
+                        System.out.println("Enter the number (id) of the table you want to update:");
+                        int tableNumberUpdate = assureIntOption();
+                        System.out.println("Enter the new number of seats of the table:");
+                        int newSeats = assureIntOption();
+                        displayEnumOptions(TableStatus.class);
+                        int tableStatusOption = assureIntOption();
+                        TableStatus tableStatus = TableStatus.values()[tableStatusOption - 1];
+                        restaurant.updateTable(tableNumberUpdate, newSeats, tableStatus);
+                        break;
+                    case EXIT:
+                        System.out.println("Exiting...");
+                        return;
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Invalid option!");
+                break;
+            }
+        }while (true);
+    }
+
+    public static void modifyRestaurantOptions(Restaurant restaurant, AuthSystem authSystem) {
+        int option;
         do {
             ModifyRestaurant[] modifyRestaurants = ModifyRestaurant.values();
             displayEnumOptions(ModifyRestaurant.class);
@@ -501,10 +624,11 @@ public class Main {
                     case MODIFY_STAFF:
                         System.out.println("First the data from restaurant about the staff will be modified");
                         modifyStaffOptions(restaurant);
-                        System.out.println("Now the staff from the authentification system will be modified");
-
+                        System.out.println("Now the data from the authentification system will be modified");
+                        modifyStaffOptions(authSystem);
                         break;
                     case MODIFY_TABLES:
+                        modifyTableOptions(restaurant);
                         break;
                     case MODIFY_MENU:
                         modifyMenuOptions(restaurant);
@@ -523,7 +647,7 @@ public class Main {
 
     public static void mainConsoleIO(Role role, Restaurant restaurant, AuthSystem authSystem) {
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        int option;
         do {
             switch (role) {
                 case CLIENT:
@@ -533,19 +657,43 @@ public class Main {
                         ClientOptions clientOptions = ClientOptions.values()[option - 1];
                         switch (clientOptions){
                             case MAKE_RESERVATION:
+                                System.out.println("Enter your full name:");
+                                String fullName = scanner.nextLine();
+                                System.out.println("Enter your phone number:");
+                                String phoneNumber = scanner.nextLine();
+                                System.out.println("Enter the date and time of the reservation:");
+                                System.out.println("Year:");
+                                int year = assureIntOption();
+                                System.out.println("Month:");
+                                int month = assureIntOption();
+                                System.out.println("Day:");
+                                int day = assureIntOption();
+                                System.out.println("Hour:");
+                                int hour = assureIntOption();
+                                System.out.println("Minute:");
+                                int minute = assureIntOption();
+                                System.out.println("Enter the number of people:");
+                                int numberOfPeople = assureIntOption();
+                                LocalDateTime reservationDateTime = LocalDateTime.of(year, month, day, hour, minute);
+                                restaurant.getReservations().add(new Reservation(fullName, phoneNumber, reservationDateTime, numberOfPeople));
                                 break;
                             case UPDATE_RESERVATION:
+                                System.out.println("To be implemented...");
                                 break;
                             case CANCEL_RESERVATION:
+                                System.out.println("To be implemented... 1");
                                 break;
                             case VIEW_MENU:
                                 restaurant.getMenu().displayMenu();
                                 break;
                             case MAKE_ORDER:
+                                System.out.println("To be implemented... 2");
                                 break;
                             case VIEW_ORDERS:
+                                System.out.println("To be implemented... 3");
                                 break;
                             case CANCEL_ORDER:
+                                System.out.println("To be implemented... 4");
                                 break;
                             case EXIT:
                                 System.out.println("Exiting...");
@@ -567,6 +715,7 @@ public class Main {
                             case VIEW_RESERVATIONS:
                                 break;
                             case VIEW_ORDERS:
+                                System.out.println("To be implemented... 5");
                                 break;
                             case EXIT:
                                 System.out.println("Exiting...");
@@ -585,10 +734,10 @@ public class Main {
                         AdminOptions adminOptions = AdminOptions.values()[option - 1];
                         switch (adminOptions){
                             case MODIFY_RESTAURANT:
-                                modifyRestaurantOptions(restaurant);
+                                modifyRestaurantOptions(restaurant, authSystem);
                                 break;
                             case VIEW_ALL_RESERVATIONS:
-                                restaurant.getReservations().forEach((item) -> System.out.println(item));
+                                restaurant.getReservations().forEach(System.out::println);
                                 break;
                             case VIEW_ALL_ORDERS:
                                 break;
@@ -614,7 +763,7 @@ public class Main {
         AuthSystem authSystem = new AuthSystem();
        List<User> users = JsonUtil.loadFromJson("users.json", User.class);
         if (users != null) {
-            users.forEach(user -> authSystem.addUser(user));
+            users.forEach(authSystem::addUser);
         }
         while (!beginConsoleIO(authSystem)) {
            beginConsoleIO(authSystem);

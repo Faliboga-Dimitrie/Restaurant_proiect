@@ -7,9 +7,9 @@ import org.example.enums.MenuItemType;
 import java.util.Scanner;
 
 public class Menu {
-    private ArrayList<Drink> drinks;
-    private ArrayList<Food> foods;
-    private ArrayList<Special> specials;
+    private final ArrayList<Drink> drinks;
+    private final ArrayList<Food> foods;
+    private final ArrayList<Special> specials;
     private final HashMap<String, Integer> drinksByName = new HashMap<>();
     private final HashMap<String, Integer> foodsByName = new HashMap<>();
     private final HashMap<String, Integer> specialsByName = new HashMap<>();
@@ -22,28 +22,10 @@ public class Menu {
     private boolean toAdd = false;
     private boolean toIngredient = false;
 
-    public Menu() {}
-
-    public Menu(ArrayList<Drink> drinks, ArrayList<Food> foods, ArrayList<Special> specials) {
-        this.drinks = drinks;
-        this.foods = foods;
-        this.specials = specials;
-
-        for (int i = 0; i < drinks.size(); i++) {
-            drinksByName.put(drinks.get(i).getName(),i);
-            drinksByPrice.put(drinks.get(i).getPrice(),i);
-            drinksByCalories.put(drinks.get(i).getCalories(),i);
-        }
-        for (int i = 0; i < foods.size(); i++) {
-            foodsByName.put(foods.get(i).getName(),i);
-            foodsByPrice.put(foods.get(i).getPrice(),i);
-            foodsByCalories.put(foods.get(i).getCalories(),i);
-        }
-        for (int i = 0; i < specials.size(); i++) {
-            specialsByName.put(specials.get(i).getName(), i);
-            specialsByPrice.put(specials.get(i).getPrice(), i);
-            specialsByCalories.put(specials.get(i).getCalories(), i);
-        }
+    public Menu() {
+        drinks = new ArrayList<>();
+        foods = new ArrayList<>();
+        specials = new ArrayList<>();
     }
 
     public void addDrink(Drink drink) {

@@ -33,10 +33,6 @@ public class AuthSystem {
         users.remove(username);
     }
 
-    public User getUser(String username) {
-        return users.get(username);
-    }
-
     public Map<String, User> getUsers() {
         return users;
     }

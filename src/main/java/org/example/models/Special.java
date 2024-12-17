@@ -42,7 +42,7 @@ public class Special extends MenuItem{
 
     @Override
     public String toString() {
-        String type = "";
+        String type;
         if(chefSpecial)
             type = "Chef Special";
         else

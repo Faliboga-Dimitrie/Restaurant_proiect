@@ -11,8 +11,7 @@ public class Reservation {
     private int numberOfPeople;
     private String tableId;
 
-    public Reservation(String fullName, String phoneNumber, LocalDateTime reservationDateTime,
-                       int numberOfPeople, String specialRequests) {
+    public Reservation(String fullName, String phoneNumber, LocalDateTime reservationDateTime, int numberOfPeople) {
         this.reservationId = UUID.randomUUID().toString();
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;

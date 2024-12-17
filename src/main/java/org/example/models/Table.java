@@ -1,80 +1,72 @@
 package org.example.models;
 
 import java.util.UUID;
+import org.example.enums.TableStatus;
 
 public class Table {
     private final String tableId;
-    private final int numberOfSeats;
-    private String status;
-    private String location;
+    private int numberOfSeats;
+    private TableStatus status;
 
     // Constructor
-    public Table(int numberOfSeats, String location) {
+    public Table(int numberOfSeats) {
         this.tableId = UUID.randomUUID().toString();
         this.numberOfSeats = numberOfSeats;
-        this.status = "liber";
-        this.location = location;
+        this.status = TableStatus.FREE;
     }
 
     // Getters și Setters
-    public String getTableId() {
-        return tableId;
+    public int getTableId() {
+        return Integer.parseInt(tableId);
     }
 
     public int getNumberOfSeats() {
         return numberOfSeats;
     }
 
-    public String getStatus() {
+    public TableStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TableStatus status) {
         this.status = status;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public boolean reserve() {
-        if (status.equals("liber")) {
-            status = "rezervat";
+    public boolean reserveTable() {
+        if (status.equals(TableStatus.FREE)) {
+            status = TableStatus.RESERVED;
             return true;
-        } else {
-            System.out.println("Masa nu este disponibilă pentru rezervare.");
-            return false;
         }
+        System.out.println("Masa nu este disponibilă pentru rezervare.");
+        return false;
     }
 
-    public boolean occupy() {
-        if (status.equals("rezervat") || status.equals("liber")) {
-            status = "ocupat";
+    public boolean occupyTable() {
+        if (status.equals(TableStatus.RESERVED) || status.equals(TableStatus.FREE)) {
+            status = TableStatus.OCCUPIED;
             System.out.println("Masa a fost ocupată.");
             return true;
-        } else {
-            System.out.println("Masa nu poate fi ocupată.");
-            return false;
         }
+        System.out.println("Masa nu poate fi ocupată.");
+        return false;
     }
 
-    public boolean free() {
-        if (status.equals("ocupat")) {
-            status = "liber";
+    public boolean freeTable() {
+        if (status.equals(TableStatus.OCCUPIED) || status.equals(TableStatus.RESERVED)) {
+            status = TableStatus.FREE;
             System.out.println("Masa a fost eliberată.");
             return true;
-        } else {
-            System.out.println("Masa nu poate fi eliberată.");
-            return false;
         }
+        System.out.println("Masa nu poate fi eliberată.");
+        return false;
     }
 
     @Override
     public String toString() {
-        return "Masa " + tableId + " (" + location + ") - " + status + " - Locuri: " + numberOfSeats;
+        return "Masa " + tableId + status + " - Locuri: " + numberOfSeats;
+    }
+
+    public void setNumberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
     }
 }

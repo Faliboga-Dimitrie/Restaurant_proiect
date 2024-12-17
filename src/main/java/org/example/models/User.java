@@ -13,12 +13,6 @@ public class User {
         this.role = role;
     }
 
-    public User() {
-        this.username = "";
-        this.password = "";
-        this.role = Role.CLIENT;
-    }
-
     public String getUsername() {
         return username;
     }

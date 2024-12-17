@@ -6,7 +6,6 @@ public class Person {
     protected String name;
     protected String surname;
     protected int age;
-    protected String email;
     protected String phoneNumber;
     protected LocalDate dateOfBirth;
 
@@ -14,16 +13,14 @@ public class Person {
         name = "";
         surname = "";
         age = 0;
-        email = "";
         phoneNumber = "";
         dateOfBirth = LocalDate.now();
     }
 
-    public Person(String name, String surname, int age, String email, String phoneNumber, LocalDate dateOfBirth) {
+    public Person(String name, String surname, int age, String phoneNumber, LocalDate dateOfBirth) {
         this.name = name;
         this.surname = surname;
         this.age = age;
-        this.email = email;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
     }
@@ -52,14 +49,6 @@ public class Person {
         this.age = age;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -82,7 +71,6 @@ public class Person {
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
-                ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 '}';

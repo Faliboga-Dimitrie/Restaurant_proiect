@@ -16,14 +16,6 @@ public class Ingredient {
         unit = "";
     }
 
-    public Ingredient(String name, int quantity, String unit, boolean isVegetarian, boolean isAllergen) {
-        this.name = name;
-        this.quantity = quantity;
-        this.unit = unit;
-        this.isVegetarian = isVegetarian;
-        this.isAllergen = isAllergen;
-    }
-
     public String getName() {
         return name;
     }

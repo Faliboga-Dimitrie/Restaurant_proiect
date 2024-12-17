@@ -31,16 +31,6 @@ public class MenuItem   {
         this.isAvailable = isAvailable;
     }
 
-    public MenuItem(Ingredient ingredient, String name, String description, double price, int calories, boolean isAvailable) {
-        this.ingredients = new HashMap<>();
-        this.ingredients.put(ingredient.getName(),ingredient);
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.calories = calories;
-        this.isAvailable = isAvailable;
-    }
-
     public String getName() {
         return name;
     }
@@ -94,10 +84,9 @@ public class MenuItem   {
     }
 
     private void interogateUser(){
-        String input;
         try (Scanner scanner = new Scanner(System.in)){
             updateType.print();
-            updateType = askUser(scanner, "type one of the above, in caps");
+            updateType = askUser(scanner);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -105,8 +94,8 @@ public class MenuItem   {
 
     }
 
-    private IngredientUpdateType askUser(Scanner scanner, String question) {
-        System.out.println(question);
+    private IngredientUpdateType askUser(Scanner scanner) {
+        System.out.println("type one of the above, in caps");
         while (true){
             try{
                 return IngredientUpdateType.valueOf(scanner.next());

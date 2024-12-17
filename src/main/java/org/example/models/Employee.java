@@ -2,44 +2,32 @@ package org.example.models;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.DayOfWeek;
+import java.util.UUID;
 
 public class Employee extends Person{
-    private String role;
     private double salary;
     private LocalDate hireDate;
-    private int ID;
+    private final String ID;
 
     public Employee() {
         super();
-        role = "";
         salary = 0;
         hireDate = LocalDate.now();
-        ID = 0;
+        ID = UUID.randomUUID().toString();
     }
 
-    public Employee(String name, String surname, int age, String email, String phoneNumber, LocalDate dateOfBirth, String position, double salary, LocalDate hireDate, int ID) {
-        super(name, surname, age, email, phoneNumber, dateOfBirth);
-        this.role = position;
+    public Employee(String name, String surname, int age, String phoneNumber, LocalDate dateOfBirth, double salary, LocalDate hireDate) {
+        super(name, surname, age, phoneNumber, dateOfBirth);
         this.salary = salary;
         this.hireDate = hireDate;
-        this.ID = ID;
+        this.ID = UUID.randomUUID().toString();
     }
 
-    public Employee(Person person, String position, double salary, LocalDate hireDate, int ID) {
-        super(person.getName(), person.getSurname(), person.getAge(), person.getEmail(), person.getPhoneNumber(), person.getDateOfBirth());
-        this.role = position;
+    public Employee(Person person, double salary, LocalDate hireDate) {
+        super(person.getName(), person.getSurname(), person.getAge(), person.getPhoneNumber(), person.getDateOfBirth());
         this.salary = salary;
         this.hireDate = hireDate;
-        this.ID = ID;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+        this.ID = UUID.randomUUID().toString();
     }
 
     public double getSalary() {
@@ -64,9 +52,7 @@ public class Employee extends Person{
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
-                ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", position='" + role + '\'' +
                 ", salary=" + salary +
                 ", hireDate=" + hireDate +
                 '}';
@@ -81,10 +67,6 @@ public class Employee extends Person{
     }
 
     public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
+        return Integer.parseInt(ID);
     }
 }
