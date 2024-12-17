@@ -8,7 +8,6 @@ public class Employee extends Person{
     private String role;
     private double salary;
     private LocalDate hireDate;
-    private WorkSchedule workSchedule;
     private int ID;
 
     public Employee() {
@@ -16,7 +15,6 @@ public class Employee extends Person{
         role = "";
         salary = 0;
         hireDate = LocalDate.now();
-        workSchedule = new WorkSchedule();
         ID = 0;
     }
 
@@ -25,7 +23,6 @@ public class Employee extends Person{
         this.role = position;
         this.salary = salary;
         this.hireDate = hireDate;
-        workSchedule = new WorkSchedule();
         this.ID = ID;
     }
 
@@ -34,7 +31,6 @@ public class Employee extends Person{
         this.role = position;
         this.salary = salary;
         this.hireDate = hireDate;
-        workSchedule = new WorkSchedule();
         this.ID = ID;
     }
 
@@ -84,23 +80,11 @@ public class Employee extends Person{
         return Period.between(hireDate, LocalDate.now());
     }
 
-    public void setWorkDay(DayOfWeek day, int startHour, int endHour, int breakStart, int breakEnd) {
-        workSchedule.addWorkDay(day, startHour, endHour, breakStart, breakEnd);
-    }
-
-    public WorkDay getWorkDay(DayOfWeek day) {
-        return workSchedule.getWorkDay(day);
-    }
-
     public int getID() {
         return ID;
     }
 
     public void setID(int ID) {
         this.ID = ID;
-    }
-
-    public void setWorkSchedule(WorkSchedule workSchedule) {
-        this.workSchedule = workSchedule;
     }
 }

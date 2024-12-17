@@ -79,9 +79,9 @@ public class Restaurant {
         return reservations;
     }
 
-    public void MakeReservation(String fullName, String phoneNumber, String email, LocalDateTime reservationDateTime,
+    public void MakeReservation(String fullName, String phoneNumber, LocalDateTime reservationDateTime,
                                 int numberOfPeople, String specialRequests){
-        Reservation newReservation = new Reservation(fullName,phoneNumber,email,reservationDateTime,numberOfPeople,specialRequests);
+        Reservation newReservation = new Reservation(fullName,phoneNumber,reservationDateTime,numberOfPeople,specialRequests);
         if(reservationByPersonName.containsKey(fullName)){
             System.out.println("Rezervarea nu a putut fi efectuată. O rezervare cu acest nume există deja.");
             return;
@@ -133,10 +133,8 @@ public class Restaurant {
         tables.get(tableIndex).free();
         reservations.get(reservationIndex).setFullName(fullName);
         reservations.get(reservationIndex).setPhoneNumber(phoneNumber);
-        reservations.get(reservationIndex).setEmail(email);
         reservations.get(reservationIndex).setReservationDateTime(reservationDateTime);
         reservations.get(reservationIndex).setNumberOfPeople(numberOfPeople);
-        reservations.get(reservationIndex).setSpecialRequests(specialRequests);
         if(reservationByDateTime.containsKey(reservationDateTime)){
             System.out.println("Rezervarea nu a putut fi actualizată. O rezervare la această dată și oră există deja.");
             return;
@@ -167,12 +165,12 @@ public class Restaurant {
     public void updateTable(int tableId, int numberOfSeats, String status){}
 
     public void addStaff(String name, String surname, int age, String email, String phoneNumber, LocalDateTime dateOfBirth,
-                         String role, double salary, LocalDateTime hireDate, WorkSchedule workSchedule){}
+                         String role, double salary, LocalDateTime hireDate){}
 
     public void removeStaff(int staffId){}
 
     public void updateStaff(int staffId, String name, String surname, int age, String email, String phoneNumber, LocalDateTime dateOfBirth,
-                            String role, double salary, LocalDateTime hireDate, WorkSchedule workSchedule){}
+                            String role, double salary, LocalDateTime hireDate){}
 
 
 }

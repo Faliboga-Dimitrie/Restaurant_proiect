@@ -245,34 +245,6 @@ public class Main {
         }
     }
 
-    public static void WaiterOptions(Restaurant restaurant){
-        Scanner scanner = new Scanner(System.in);
-        int option = 0;
-        do {
-            WaiterOptions[] waiterOptions = WaiterOptions.values();
-            displayEnumOptions(WaiterOptions.class);
-            option = assureIntOption();
-            try{
-                WaiterOptions waiterOption = waiterOptions[option - 1];
-                switch (waiterOption){
-                    case VIEW_RESERVATIONS:
-                        break;
-                    case VIEW_ORDERS:
-                        break;
-                    case DELIVER_ORDER:
-                        break;
-                    case EXIT:
-                        System.out.println("Exiting...");
-                        return;
-                }
-            }
-            catch (ArrayIndexOutOfBoundsException e){
-                System.out.println("Invalid option!");
-                break;
-            }
-        }while (true);
-    }
-
     public static HashMap<String,Ingredient> setIngredientList(){
         Scanner scanner = new Scanner(System.in);
         HashMap<String,Ingredient> ingredients = new HashMap<>();
@@ -391,36 +363,18 @@ public class Main {
                         }
                         break;
                     case UPDATE_ITEM:
+                        System.out.println("Enter the name of the item you want to update:");
+                        String itemNameUpdate = scanner.nextLine();
+                        MenuItemType[] menuItemTypesUpdate = MenuItemType.values();
+                        displayEnumOptions(MenuItemType.class);
+                        int menuItemTypeOptionUpdate = assureIntOption();
+                        MenuItemType menuItemTypeUpdate = menuItemTypesUpdate[menuItemTypeOptionUpdate - 1];
+                        MenuUpdateType[] menuUpdateTypes = MenuUpdateType.values();
+                        displayEnumOptions(MenuUpdateType.class);
+                        int menuUpdateTypeOption = assureIntOption();
+                        MenuUpdateType menuUpdateType = menuUpdateTypes[menuUpdateTypeOption - 1];
 
-                        break;
-                    case EXIT:
-                        System.out.println("Exiting...");
-                        return;
-                }
-            }
-            catch (ArrayIndexOutOfBoundsException e){
-                System.out.println("Invalid option!");
-                break;
-            }
-        }while (true);
-    }
 
-    public static void ChefOptions(Restaurant restaurant){
-        Scanner scanner = new Scanner(System.in);
-        int option = 0;
-        do {
-            ChefOptions[] chefOptions = ChefOptions.values();
-            displayEnumOptions(ChefOptions.class);
-            option = assureIntOption();
-            try{
-                ChefOptions chefOption = chefOptions[option - 1];
-                switch (chefOption){
-                    case VIEW_ORDERS:
-                        break;
-                    case PREPARE_ORDER:
-                        break;
-                    case UPDATE_MENU:
-                         modifyMenuOptions(restaurant);
                         break;
                     case EXIT:
                         System.out.println("Exiting...");
@@ -544,69 +498,16 @@ public class Main {
             try{
                 ModifyRestaurant modifyRestaurant = modifyRestaurants[option - 1];
                 switch (modifyRestaurant){
-                    case ADD_TABLE:
-                        System.out.println("Enter the number of the table:");
-                        int number = scanner.nextInt();
-                        scanner.nextLine();
-                        restaurant.addTable(number, "liber");
-                        System.out.println("Table added successfully!");
+                    case MODIFY_STAFF:
+                        System.out.println("First the data from restaurant about the staff will be modified");
+                        modifyStaffOptions(restaurant);
+                        System.out.println("Now the staff from the authentification system will be modified");
+
                         break;
-                    case REMOVE_TABLE:
-                        System.out.println("Enter the number of the table you want to remove:");
-                        int tableNumber = scanner.nextInt();
-                        scanner.nextLine();
-                        restaurant.removeTable(tableNumber);
-                        System.out.println("Table removed successfully!");
+                    case MODIFY_TABLES:
                         break;
-                    case UPDATE_TABLE:
-                        System.out.println("Enter the number of the table you want to update:");
-                        int tableNumberUpdate = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println("Enter the new number of seats to the table:");
-                        int newSeatsNumber = scanner.nextInt();
-                        scanner.nextLine();
-                        restaurant.updateTable(tableNumberUpdate, newSeatsNumber, "liber");
-                        System.out.println("Table updated successfully!");
-                        break;
-                    case ADD_STAFF:
-                        System.out.println("Enter the username of the staff:");
-                        String username = scanner.nextLine();
-                        System.out.println("Staff added successfully!");
-                        break;
-                    case REMOVE_STAFF:
-                        System.out.println("Enter the username of the staff you want to remove:");
-                        String staffUsername = scanner.nextLine();
-                        System.out.println("Staff removed successfully!");
-                        break;
-                    case UPDATE_STAFF:
-                        System.out.println("Enter the username of the staff you want to update:");
-                        String staffUsernameUpdate = scanner.nextLine();
-                        System.out.println("Enter the new username of the staff:");
-                        String newStaffUsername = scanner.nextLine();
-                        System.out.println("Staff updated successfully!");
-                        break;
-                    case ADD_MENU_ITEM:
-                        System.out.println("Enter the name of the item:");
-                        String name = scanner.nextLine();
-                        System.out.println("Enter the price of the item:");
-                        double price = scanner.nextDouble();
-                        scanner.nextLine();
-                        System.out.println("Menu item added successfully!");
-                        break;
-                    case REMOVE_MENU:
-                        System.out.println("Enter the name of the item you want to remove:");
-                        String itemName = scanner.nextLine();
-                        System.out.println("Menu item removed successfully!");
-                        break;
-                    case UPDATE_MENU:
-                        System.out.println("Enter the name of the item you want to update:");
-                        String itemNameUpdate = scanner.nextLine();
-                        System.out.println("Enter the new name of the item:");
-                        String newName = scanner.nextLine();
-                        System.out.println("Enter the new price of the item:");
-                        double newPrice = scanner.nextDouble();
-                        scanner.nextLine();
-                        System.out.println("Menu item updated successfully!");
+                    case MODIFY_MENU:
+                        modifyMenuOptions(restaurant);
                         break;
                     case EXIT:
                         System.out.println("Exiting...");
@@ -663,11 +564,9 @@ public class Main {
                     try{
                         StaffOptions staffOptions = StaffOptions.values()[option - 1];
                         switch (staffOptions){
-                            case WAITER:
-                                WaiterOptions(restaurant);
+                            case VIEW_RESERVATIONS:
                                 break;
-                            case CHEF:
-                                ChefOptions(restaurant);
+                            case VIEW_ORDERS:
                                 break;
                             case EXIT:
                                 System.out.println("Exiting...");
@@ -685,13 +584,6 @@ public class Main {
                     try{
                         AdminOptions adminOptions = AdminOptions.values()[option - 1];
                         switch (adminOptions){
-                            case MODIFY_MENU:
-                                modifyMenuOptions(restaurant);
-                                break;
-                            case MODIFY_STAFF:
-                                modifyStaffOptions(authSystem);
-                                modifyStaffOptions(restaurant);
-                                break;
                             case MODIFY_RESTAURANT:
                                 modifyRestaurantOptions(restaurant);
                                 break;

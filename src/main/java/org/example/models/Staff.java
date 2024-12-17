@@ -75,9 +75,6 @@ public class Staff {
             case HIRED_DATE:
                 employee.setHireDate((LocalDate) value);
                 break;
-            case WORK_SCHEDULE:
-                employee.setWorkSchedule((WorkSchedule) value);
-                break;
             case ID:
                 employeesById.remove(id);
                 employee.setID((int) value);

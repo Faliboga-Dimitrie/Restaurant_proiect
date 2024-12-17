@@ -1,7 +1,7 @@
 package org.example.enums;
 
 public enum StaffOptions {
-    WAITER,
-    CHEF,
+    VIEW_RESERVATIONS,
+    VIEW_ORDERS,
     EXIT
 }

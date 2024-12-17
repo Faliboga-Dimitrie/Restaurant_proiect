@@ -226,6 +226,37 @@ public class Menu {
                     throw new IllegalArgumentException("Invalid value type for DESCRIPTION. Expected String.");
                 }
                 break;
+            case CALORIES:
+                if (newValue instanceof Integer) {
+                    item.setCalories((Integer) newValue);
+                } else {
+                    throw new IllegalArgumentException("Invalid value type for CALORIES. Expected Integer.");
+                }
+                break;
+            case AVAILABILITY:
+                if (newValue instanceof Boolean) {
+                    item.setAvailable((Boolean) newValue);
+                } else {
+                    throw new IllegalArgumentException("Invalid value type for AVAILABILITY. Expected Boolean.");
+                }
+                break;
+            case NONE:
+                break;
+            case ALL:
+                if(newValue instanceof MenuItem)
+                {
+                    MenuItem newItem = (MenuItem) newValue;
+                    item.setName(newItem.getName());
+                    item.setPrice(newItem.getPrice());
+                    item.setCalories(newItem.getCalories());
+                    item.setDescription(newItem.getDescription());
+                    item.setAvailable(newItem.isAvailable());
+                    item.setIngredients(newItem.getIngredients());
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Invalid value type for ALL. Expected MenuItem.");
+                }
             default:
                 throw new UnsupportedOperationException("Unsupported update type: " + updateType);
         }
