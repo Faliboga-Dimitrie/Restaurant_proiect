@@ -5,6 +5,8 @@ public enum MenuUpdateType {
     PRICE,
     INGREDIENTS,
     DESCRIPTION,
+    CALORIES,
+    AVAILABILITY,
     NONE,
     ALL;
 

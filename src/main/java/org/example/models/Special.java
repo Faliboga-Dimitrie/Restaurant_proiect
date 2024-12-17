@@ -4,27 +4,23 @@ import java.util.HashMap;
 
 public class Special extends MenuItem{
         private boolean chefSpecial;
-        private boolean foodSpecial;
         private boolean eventSpecial;
 
     public Special() {
         super();
         chefSpecial = false;
-        foodSpecial = false;
         eventSpecial = false;
     }
 
-    public Special(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, boolean chefSpecial, boolean foodSpecial, boolean eventSpecial) {
+    public Special(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, boolean chefSpecial, boolean eventSpecial) {
         super(ingredients, name, description, price, calories, isAvailable);
         this.chefSpecial = chefSpecial;
-        this.foodSpecial = foodSpecial;
         this.eventSpecial = eventSpecial;
     }
 
-    public Special(MenuItem menuItem, boolean chefSpecial, boolean foodSpecial, boolean eventSpecial) {
+    public Special(MenuItem menuItem, boolean chefSpecial, boolean eventSpecial) {
         super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
         this.chefSpecial = chefSpecial;
-        this.foodSpecial = foodSpecial;
         this.eventSpecial = eventSpecial;
     }
 
@@ -34,14 +30,6 @@ public class Special extends MenuItem{
 
     public void setChefSpecial(boolean chefSpecial) {
         this.chefSpecial = chefSpecial;
-    }
-
-    public boolean isFoodSpecial() {
-        return foodSpecial;
-    }
-
-    public void setFoodSpecial(boolean foodSpecial) {
-        this.foodSpecial = foodSpecial;
     }
 
     public boolean isEventSpecial() {
@@ -57,9 +45,7 @@ public class Special extends MenuItem{
         String type = "";
         if(chefSpecial)
             type = "Chef Special";
-        else if(foodSpecial)
-            type = "Food Special";
-        else if(eventSpecial)
+        else
             type = "Event Special";
 
         return "Special{" +

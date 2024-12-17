@@ -1,13 +1,10 @@
 package org.example;
 
-import org.example.models.AuthSystem;
-import org.example.models.Restaurant;
-import org.example.models.User;
-import org.example.models.JsonUtil;
-import org.example.models.AuthData;
+import org.example.models.*;
 import org.example.enums.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.List;
 
@@ -63,12 +60,48 @@ public class Main {
         System.out.println("4. Exit");
     }
 
-    public static int asureOption(){
+    public static int assureIntOption(){
         Scanner scanner = new Scanner(System.in);
         int option;
         do{
             try {
                 option = scanner.nextInt();
+                scanner.nextLine();
+                break;
+            }
+            catch (Exception e){
+                System.out.println("Invalid option!");
+                System.out.println("Please input a valid option:");
+                scanner.nextLine();
+            }
+        }while(true);
+        return option;
+    }
+
+    public static boolean assureBooleanOption(){
+        Scanner scanner = new Scanner(System.in);
+        boolean option;
+        do{
+            try {
+                option = scanner.nextBoolean();
+                scanner.nextLine();
+                break;
+            }
+            catch (Exception e){
+                System.out.println("Invalid option!");
+                System.out.println("Please input a valid option:");
+                scanner.nextLine();
+            }
+        }while(true);
+        return option;
+    }
+
+    public static double assureDoubleOption(){
+        Scanner scanner = new Scanner(System.in);
+        double option;
+        do{
+            try {
+                option = scanner.nextDouble();
                 scanner.nextLine();
                 break;
             }
@@ -88,7 +121,7 @@ public class Main {
             switch (option) {
                 case 0:
                     adminOptionsDisplay();
-                    option = asureOption();
+                    option = assureIntOption();
                     break;
                 case 1:
                     AuthData authData = new AuthData();
@@ -128,7 +161,7 @@ public class Main {
         System.out.println("Are you and admin or other?");
         System.out.println("1. Admin");
         System.out.println("2. Other");
-        option = asureOption();
+        option = assureIntOption();
         return option == 1;
     }
 
@@ -140,7 +173,7 @@ public class Main {
         boolean selectedAdmin;
 
         loginStartScreen();
-        option = asureOption();
+        option = assureIntOption();
 
         try {
             Interogationoptions interogationoptions = Interogationoptions.values()[option - 1];
@@ -218,7 +251,7 @@ public class Main {
         do {
             WaiterOptions[] waiterOptions = WaiterOptions.values();
             displayEnumOptions(WaiterOptions.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 WaiterOptions waiterOption = waiterOptions[option - 1];
                 switch (waiterOption){
@@ -240,38 +273,125 @@ public class Main {
         }while (true);
     }
 
+    public static HashMap<String,Ingredient> setIngredientList(){
+        Scanner scanner = new Scanner(System.in);
+        HashMap<String,Ingredient> ingredients = new HashMap<>();
+        int option = 0;
+        do {
+            System.out.println("Please choose an option:");
+            System.out.println("1. Add ingredient");
+            System.out.println("2. Exit");
+            option = assureIntOption();
+            switch (option) {
+                case 1:
+                    Ingredient ingredient = new Ingredient();
+                    System.out.println("Enter the name of the ingredient:");
+                    ingredient.setName(scanner.nextLine());
+                    System.out.println("Enter the quantity of the ingredient:");
+                    ingredient.setQuantity(assureIntOption());
+                    System.out.println("Enter the unit of the ingredient:");
+                    ingredient.setUnit(scanner.nextLine());
+                    System.out.println("Is the ingredient vegetarian?");
+                    ingredient.setVegetarian(assureBooleanOption());
+                    System.out.println("Is the ingredient an allergen?");
+                    ingredient.setAllergen(assureBooleanOption());
+                    ingredients.put(ingredient.getName(), ingredient);
+                    break;
+                case 2:
+                    System.out.println("Exiting...");
+                    return ingredients;
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+
+        }while(true);
+    }
+
+    public static MenuItem populateMenuItemSubClass(){
+        Scanner scanner = new Scanner(System.in);
+        HashMap<String,Ingredient> ingredients = setIngredientList();
+        System.out.println("Enter the name of the item:");
+        String name = scanner.nextLine();
+        System.out.println("Enter the price of the item:");
+        double price = assureDoubleOption();
+        System.out.println("Enter the description of the item:");
+        String description = scanner.nextLine();
+        System.out.println("Enter the calories of the item:");
+        int calories = assureIntOption();
+        System.out.println("Is the item available (true/false):");
+        boolean isAvailable = assureBooleanOption();
+        return new MenuItem(ingredients, name, description, price, calories, isAvailable);
+    }
+
     public static void modifyMenuOptions(Restaurant restaurant) {
         Scanner scanner = new Scanner(System.in);
         int option = 0;
         do {
             ModifyMenu[] modifyMenus = ModifyMenu.values();
             displayEnumOptions(ModifyMenu.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 ModifyMenu modifyMenu = modifyMenus[option - 1];
                 switch (modifyMenu){
                     case ADD_ITEM:
-                        System.out.println("Enter the name of the item:");
-                        String name = scanner.nextLine();
-                        System.out.println("Enter the price of the item:");
-                        double price = scanner.nextDouble();
-                        scanner.nextLine();
-                        System.out.println("Item added successfully!");
+                        MenuItem menuItem = populateMenuItemSubClass();
+                        MenuItemType[] menuItemTypes = MenuItemType.values();
+                        displayEnumOptions(MenuItemType.class);
+                        int menuItemTypeOption = assureIntOption();
+                        MenuItemType menuItemType = menuItemTypes[menuItemTypeOption - 1];
+                        switch (menuItemType){
+                            case DRINK:
+                                System.out.println("Enter the quantity of the drink:");
+                                int quantity = assureIntOption();
+                                System.out.println("Is the drink alcoholic?");
+                                boolean isAlcoholic = assureBooleanOption();
+                                restaurant.getMenu().addDrink(new Drink(menuItem, isAlcoholic, quantity));
+                                break;
+                            case FOOD:
+                                System.out.println("Enter the cuisine of the food:");
+                                String cuisine = scanner.nextLine();
+                                System.out.println("Is the food an appetizer?");
+                                boolean isAppetizer = assureBooleanOption();
+                                System.out.println("Is the food a main course?");
+                                boolean isMainCourse = assureBooleanOption();
+                                System.out.println("Is the food a dessert?");
+                                boolean isDessert = assureBooleanOption();
+                                System.out.println("Is the food a side dish?");
+                                boolean isSideDish = assureBooleanOption();
+                                restaurant.getMenu().addFood(new Food(menuItem, cuisine, isAppetizer, isMainCourse, isDessert, isSideDish));
+                                break;
+                            case SPECIAL:
+                                System.out.println("Is the special a chef special?");
+                                boolean isChefSpecial = assureBooleanOption();
+                                System.out.println("Is the special an event special?");
+                                boolean isEventSpecial = assureBooleanOption();
+                                restaurant.getMenu().addSpecial(new Special(menuItem, isChefSpecial, isEventSpecial));
+                                break;
+                        }
+
                         break;
                     case REMOVE_ITEM:
                         System.out.println("Enter the name of the item you want to remove:");
                         String itemName = scanner.nextLine();
-                        System.out.println("Item removed successfully!");
+                        MenuItemType[] menuItemTypesRemove = MenuItemType.values();
+                        displayEnumOptions(MenuItemType.class);
+                        int menuItemTypeOptionRemove = assureIntOption();
+                        MenuItemType menuItemTypeRemove = menuItemTypesRemove[menuItemTypeOptionRemove - 1];
+                        switch (menuItemTypeRemove){
+                            case DRINK:
+                                restaurant.getMenu().removeDrink(restaurant.getMenu().findDrinkByName(itemName));
+                                break;
+                            case FOOD:
+                                restaurant.getMenu().removeFood(restaurant.getMenu().findFoodByName(itemName));
+                                break;
+                            case SPECIAL:
+                                restaurant.getMenu().removeSpecial(restaurant.getMenu().findSpecialByName(itemName));
+                                break;
+                        }
                         break;
                     case UPDATE_ITEM:
-                        System.out.println("Enter the name of the item you want to update:");
-                        String itemNameUpdate = scanner.nextLine();
-                        System.out.println("Enter the new name of the item:");
-                        String newName = scanner.nextLine();
-                        System.out.println("Enter the new price of the item:");
-                        double newPrice = scanner.nextDouble();
-                        scanner.nextLine();
-                        System.out.println("Item updated successfully!");
+
                         break;
                     case EXIT:
                         System.out.println("Exiting...");
@@ -291,7 +411,7 @@ public class Main {
         do {
             ChefOptions[] chefOptions = ChefOptions.values();
             displayEnumOptions(ChefOptions.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 ChefOptions chefOption = chefOptions[option - 1];
                 switch (chefOption){
@@ -321,7 +441,7 @@ public class Main {
         do {
             ModifyStaff[] modifyStaffs = ModifyStaff.values();
             displayEnumOptions(ModifyStaff.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 ModifyStaff modifyStaff = modifyStaffs[option - 1];
                 switch (modifyStaff){
@@ -381,7 +501,7 @@ public class Main {
         do {
             ModifyStaff[] modifyStaffs = ModifyStaff.values();
             displayEnumOptions(ModifyStaff.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 ModifyStaff modifyStaff = modifyStaffs[option - 1];
                 switch (modifyStaff){
@@ -420,7 +540,7 @@ public class Main {
         do {
             ModifyRestaurant[] modifyRestaurants = ModifyRestaurant.values();
             displayEnumOptions(ModifyRestaurant.class);
-            option = asureOption();
+            option = assureIntOption();
             try{
                 ModifyRestaurant modifyRestaurant = modifyRestaurants[option - 1];
                 switch (modifyRestaurant){
@@ -507,7 +627,7 @@ public class Main {
             switch (role) {
                 case CLIENT:
                     displayEnumOptions(ClientOptions.class);
-                    option = asureOption();
+                    option = assureIntOption();
                     try{
                         ClientOptions clientOptions = ClientOptions.values()[option - 1];
                         switch (clientOptions){
@@ -539,7 +659,7 @@ public class Main {
                     break;
                 case STAFF:
                     displayEnumOptions(StaffOptions.class);
-                    option = asureOption();
+                    option = assureIntOption();
                     try{
                         StaffOptions staffOptions = StaffOptions.values()[option - 1];
                         switch (staffOptions){
@@ -561,7 +681,7 @@ public class Main {
                     break;
                 case ADMIN:
                     displayEnumOptions(AdminOptions.class);
-                    option = asureOption();
+                    option = assureIntOption();
                     try{
                         AdminOptions adminOptions = AdminOptions.values()[option - 1];
                         switch (adminOptions){

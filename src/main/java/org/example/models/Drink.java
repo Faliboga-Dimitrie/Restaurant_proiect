@@ -3,37 +3,25 @@ package org.example.models;
 import java.util.HashMap;
 
 public class Drink extends MenuItem{
-    private int quantity;
     private boolean isAlcoholic;
     private int volume;
 
     public Drink() {
         super();
-        quantity = 0;
         isAlcoholic = false;
         volume = 0;
     }
 
-    public Drink(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, int quantity, boolean isAlcoholic, int volume) {
+    public Drink(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, boolean isAlcoholic, int volume) {
         super(ingredients, name, description, price, calories,isAvailable);
-        this.quantity = quantity;
         this.isAlcoholic = isAlcoholic;
         this.volume = volume;
     }
 
-    public Drink(MenuItem menuItem, int quantity, boolean isAlcoholic, int volume) {
+    public Drink(MenuItem menuItem, boolean isAlcoholic, int volume) {
         super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
-        this.quantity = quantity;
         this.isAlcoholic = isAlcoholic;
         this.volume = volume;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public boolean isAlcoholic() {
