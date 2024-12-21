@@ -5,48 +5,44 @@ import java.util.HashMap;
 import org.example.enums.MenuUpdateType;
 import org.example.enums.MenuItemType;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 public class Menu {
     private final ArrayList<Drink> drinks;
     private final ArrayList<Food> foods;
-    private final ArrayList<Special> specials;
     private final HashMap<String, Integer> drinksByName = new HashMap<>();
     private final HashMap<String, Integer> foodsByName = new HashMap<>();
-    private final HashMap<String, Integer> specialsByName = new HashMap<>();
     private final HashMap<Double, Integer> drinksByPrice = new HashMap<>();
     private final HashMap<Double, Integer> foodsByPrice = new HashMap<>();
-    private final HashMap<Double, Integer> specialsByPrice = new HashMap<>();
     private final HashMap<Integer, Integer> drinksByCalories = new HashMap<>();
     private final HashMap<Integer, Integer> foodsByCalories = new HashMap<>();
-    private final HashMap<Integer, Integer> specialsByCalories = new HashMap<>();
     private boolean toAdd = false;
     private boolean toIngredient = false;
 
     public Menu() {
         drinks = new ArrayList<>();
         foods = new ArrayList<>();
-        specials = new ArrayList<>();
     }
 
-    public void addDrink(Drink drink) {
+    public void addDrink(Drink drink, boolean fromJson) {
         drinks.add(drink);
         drinksByName.put(drink.getName(),drinks.size()-1);
         drinksByPrice.put(drink.getPrice(),drinks.size()-1);
         drinksByCalories.put(drink.getCalories(),drinks.size()-1);
+        if (!fromJson) {
+            JsonUtil.appendToJson(drink, "drinks.json", Drink.class);
+        }
     }
 
-    public void addFood(Food food) {
+    public void addFood(Food food, boolean fromJson) {
         foods.add(food);
         foodsByName.put(food.getName(),foods.size()-1);
         foodsByPrice.put(food.getPrice(),foods.size()-1);
         foodsByCalories.put(food.getCalories(),foods.size()-1);
-    }
-
-    public void addSpecial(Special special) {
-        specials.add(special);
-        specialsByName.put(special.getName(),specials.size()-1);
-        specialsByPrice.put(special.getPrice(),specials.size()-1);
-        specialsByCalories.put(special.getCalories(),specials.size()-1);
+        if (!fromJson) {
+            JsonUtil.appendToJson(food, "foods.json", Food.class);
+        }
     }
 
     public void removeDrink(Drink drink) {
@@ -54,6 +50,7 @@ public class Menu {
         drinksByName.remove(drink.getName());
         drinksByPrice.remove(drink.getPrice());
         drinksByCalories.remove(drink.getCalories());
+        JsonUtil.removeFromJson("drinks.json", Drink.class, item -> item.getName().equals(drink.getName()));
     }
 
     public void removeFood(Food food) {
@@ -61,13 +58,7 @@ public class Menu {
         foodsByName.remove(food.getName());
         foodsByPrice.remove(food.getPrice());
         foodsByCalories.remove(food.getCalories());
-    }
-
-    public void removeSpecial(Special special) {
-        specials.remove(special);
-        specialsByName.remove(special.getName());
-        specialsByPrice.remove(special.getPrice());
-        specialsByCalories.remove(special.getCalories());
+        JsonUtil.removeFromJson("foods.json", Food.class, item -> item.getName().equals(food.getName()));
     }
 
     public Drink findDrinkByName(String name) {
@@ -80,11 +71,6 @@ public class Menu {
         return index != null ? foods.get(index) : null;
     }
 
-    public Special findSpecialByName(String name) {
-        Integer index = specialsByName.get(name);
-        return index != null ? specials.get(index) : null;
-    }
-
     public Drink findDrinkByPrice(double price) {
         Integer index = drinksByPrice.get(price);
         return index != null ? drinks.get(index) : null;
@@ -93,11 +79,6 @@ public class Menu {
     public Food findFoodByPrice(double price) {
         Integer index = foodsByPrice.get(price);
         return index != null ? foods.get(index) : null;
-    }
-
-    public Special findSpecialByPrice(double price) {
-        Integer index = specialsByPrice.get(price);
-        return index != null ? specials.get(index) : null;
     }
 
     public Drink findDrinkByCalories(int calories) {
@@ -110,9 +91,12 @@ public class Menu {
         return index != null ? foods.get(index) : null;
     }
 
-    public Special findSpecialByCalories(int calories) {
-        Integer index = specialsByCalories.get(calories);
-        return index != null ? specials.get(index) : null;
+    public MenuItem findMenuItemByName(String name) {
+        MenuItem item = findDrinkByName(name);
+        if (item == null) {
+            item = findFoodByName(name);
+        }
+        return item;
     }
 
     private void interogateUser() {
@@ -149,99 +133,216 @@ public class Menu {
             case FOOD -> {
                 return findFoodByName(name);
             }
-            case SPECIAL -> {
-                return findSpecialByName(name);
-            }
             default -> throw new UnsupportedOperationException("Unsupported menu item type: " + type);
 
         }
     }
 
-    public <T> void updateMenuItem(String itemName, MenuUpdateType updateType, MenuItemType type, T newValue) {
-        MenuItem item = findMenuItemByNameAndType(itemName, type);
+    public <T> void updateMenuItem(String itemName, MenuUpdateType updateType, MenuItemType menuItemType, T newValue) {
+        MenuItem item = findMenuItemByNameAndType(itemName, menuItemType);
 
         if (item == null) {
-            System.out.println(type + " not found.");
+            System.out.println(menuItemType + " not found.");
             return;
         }
 
         try {
             updateMenuItem(item, updateType, newValue);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | UnsupportedOperationException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private <T extends MenuItem> void updateMenuItem(T item, MenuUpdateType updateType, Object newValue) {
         if (item == null) {
-            System.out.println("Item not found.");
-            return;
+            throw new UnsupportedOperationException("Item not found.");
         }
+        updateCommonMenuItemFields(item, updateType, newValue, item instanceof Drink);
+        handleSpecificMenuItemUpdate(item, updateType, newValue);
+    }
 
+    private <T extends MenuItem> void updateCommonMenuItemFields(T item, MenuUpdateType updateType, Object newValue, boolean isDrink) {
         switch (updateType) {
             case NAME:
-                if (newValue instanceof String) {
-                    item.setName((String) newValue);
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for NAME. Expected String.");
-                }
+                ensureType(newValue, String.class);
+                item.setName((String) newValue);
                 break;
             case PRICE:
-                if (newValue instanceof Double) {
-                    item.setPrice((Double) newValue);
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for PRICE. Expected Double.");
-                }
+                ensureType(newValue, Double.class);
+                item.setPrice((Double) newValue);
                 break;
             case INGREDIENTS:
-                if (newValue instanceof Ingredient ingredient) {
-                    interogateUser();
-                    item.modifyIngredients(ingredient, toAdd, toIngredient, item.findIngredientByName(ingredient.getName()));
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for INGREDIENTS. Expected Ingredient.");
-                }
+                ensureType(newValue, Ingredient.class);
+                Ingredient ingredient = (Ingredient) newValue;
+                interogateUser();
+                item.modifyIngredients(ingredient, toAdd, toIngredient, item.findIngredientByName(ingredient.getName()));
                 break;
             case DESCRIPTION:
-                if (newValue instanceof String) {
-                    item.setDescription((String) newValue);
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for DESCRIPTION. Expected String.");
-                }
+                ensureType(newValue, String.class);
+                item.setDescription((String) newValue);
                 break;
             case CALORIES:
-                if (newValue instanceof Integer) {
-                    item.setCalories((Integer) newValue);
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for CALORIES. Expected Integer.");
-                }
+                ensureType(newValue, Integer.class);
+                item.setCalories((Integer) newValue);
                 break;
             case AVAILABILITY:
-                if (newValue instanceof Boolean) {
-                    item.setAvailable((Boolean) newValue);
-                } else {
-                    throw new IllegalArgumentException("Invalid value type for AVAILABILITY. Expected Boolean.");
-                }
+                ensureType(newValue, Boolean.class);
+                item.setAvailable((Boolean) newValue);
                 break;
-            case NONE:
-                break;
-            case ALL:
-                if(newValue instanceof MenuItem)
-                {
-                    MenuItem newItem = (MenuItem) newValue;
-                    item.setName(newItem.getName());
-                    item.setPrice(newItem.getPrice());
-                    item.setCalories(newItem.getCalories());
-                    item.setDescription(newItem.getDescription());
-                    item.setAvailable(newItem.isAvailable());
-                    item.setIngredients(newItem.getIngredients());
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Invalid value type for ALL. Expected MenuItem.");
-                }
             default:
-                throw new UnsupportedOperationException("Unsupported update type: " + updateType);
+                throw new UnsupportedOperationException("Unsupported menu update type: " + updateType);
         }
+        if(updateType == MenuUpdateType.INGREDIENTS)
+            return;
+
+        updateMenuItemInJson(isDrink ? "drinks.json" : "foods.json", item.getClass(), item.getName(), newValue, updateType);
+    }
+
+    private void handleSpecificMenuItemUpdate(MenuItem item, MenuUpdateType updateType, Object newValue) {
+        switch (item) {
+            case Drink drink -> handleDrinkUpdate(drink, updateType, newValue);
+            case Food food -> handleFoodUpdate(food, updateType, newValue);
+            default -> throw new UnsupportedOperationException("Unsupported menu item type: " + item.getClass().getSimpleName());
+        }
+    }
+
+    private void handleDrinkUpdate(Drink drink, MenuUpdateType updateType, Object newValue) {
+        switch (updateType) {
+            case IS_ALCOHOLIC:
+                ensureType(newValue, Boolean.class);
+                drink.setAlcoholic((Boolean) newValue);
+                break;
+            case VOLUME:
+                ensureType(newValue, Integer.class);
+                drink.setVolume((Integer) newValue);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported drink update type: " + updateType);
+        }
+        updateDrinkItemInJson("drinks.json", Drink.class, drink.getName(), newValue, updateType);
+    }
+
+    private void handleFoodUpdate(Food food, MenuUpdateType updateType, Object newValue) {
+        switch (updateType) {
+            case CUISINE_TYPE:
+                ensureType(newValue, String.class);
+                food.setCuisineType((String) newValue);
+                break;
+            case IS_MAIN_COURSE:
+                ensureType(newValue, Boolean.class);
+                food.setMainCourse((Boolean) newValue);
+                break;
+            case IS_DESSERT:
+                ensureType(newValue, Boolean.class);
+                food.setDessert((Boolean) newValue);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported food update type: " + updateType);
+        }
+        updateFoodItemInJson("foods.json", Food.class, food.getName(), newValue, updateType);
+    }
+
+    private static void ensureType(Object value, Class<?> expectedType) {
+        if (!expectedType.isInstance(value)) {
+            throw new IllegalArgumentException("Invalid value type. Expected " + expectedType.getSimpleName() + ".");
+        }
+    }
+
+    public static <T> void updateMenuItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+        Predicate<T> condition = item -> {
+            if (item instanceof MenuItem menuItem) {
+                return menuItem.getName().equals(itemName);
+            }
+            return false;
+        };
+
+        Consumer<T> updater = item -> {
+            if (item instanceof MenuItem menuItem) {
+                switch (updateType) {
+                    case NAME -> {
+                        ensureType(newValue, String.class);
+                        menuItem.setName((String) newValue);
+                    }
+                    case PRICE -> {
+                        ensureType(newValue, Double.class);
+                        menuItem.setPrice((Double) newValue);
+                    }
+                    case DESCRIPTION -> {
+                        ensureType(newValue, String.class);
+                        menuItem.setDescription((String) newValue);
+                    }
+                    case CALORIES -> {
+                        ensureType(newValue, Integer.class);
+                        menuItem.setCalories((Integer) newValue);
+                    }
+                    case AVAILABILITY -> {
+                        ensureType(newValue, Boolean.class);
+                        menuItem.setAvailable((Boolean) newValue);
+                    }
+                    default -> throw new UnsupportedOperationException("Unsupported menu update type: " + updateType);
+                }
+            }
+        };
+
+        JsonUtil.updateElementInJson(fileName, clazz, condition, updater);
+    }
+
+    public static <T> void updateDrinkItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+        Predicate<T> condition = item -> {
+            if (item instanceof Drink drink) {
+                return drink.getName().equals(itemName);
+            }
+            return false;
+        };
+
+        Consumer<T> updater = item -> {
+            if (item instanceof Drink drink) {
+                switch (updateType) {
+                    case IS_ALCOHOLIC -> {
+                        ensureType(newValue, Boolean.class);
+                        drink.setAlcoholic((Boolean) newValue);
+                    }
+                    case VOLUME -> {
+                        ensureType(newValue, Integer.class);
+                        drink.setVolume((Integer) newValue);
+                    }
+                    default -> throw new UnsupportedOperationException("Unsupported drink update type: " + updateType);
+                }
+            }
+        };
+
+        JsonUtil.updateElementInJson(fileName, clazz, condition, updater);
+    }
+
+    public static <T> void updateFoodItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+        Predicate<T> condition = item -> {
+            if (item instanceof Food food) {
+                return food.getName().equals(itemName);
+            }
+            return false;
+        };
+
+        Consumer<T> updater = item -> {
+            if (item instanceof Food food) {
+                switch (updateType) {
+                    case CUISINE_TYPE -> {
+                        ensureType(newValue, String.class);
+                        food.setCuisineType((String) newValue);
+                    }
+                    case IS_MAIN_COURSE -> {
+                        ensureType(newValue, Boolean.class);
+                        food.setMainCourse((Boolean) newValue);
+                    }
+                    case IS_DESSERT -> {
+                        ensureType(newValue, Boolean.class);
+                        food.setDessert((Boolean) newValue);
+                    }
+                    default -> throw new UnsupportedOperationException("Unsupported food update type: " + updateType);
+                }
+            }
+        };
+
+        JsonUtil.updateElementInJson(fileName, clazz, condition, updater);
     }
 
     public void displayMenu() {
@@ -252,10 +353,6 @@ public class Menu {
         System.out.println("Foods:");
         for (Food food : foods) {
             System.out.println(food);
-        }
-        System.out.println("Specials:");
-        for (Special special : specials) {
-            System.out.println(special);
         }
     }
 }

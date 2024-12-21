@@ -11,12 +11,12 @@ public class Reservation {
     private int numberOfPeople;
     private String tableId;
 
-    public Reservation(String fullName, String phoneNumber, LocalDateTime reservationDateTime, int numberOfPeople) {
+    public Reservation(ReservationData reservationData) {
         this.reservationId = UUID.randomUUID().toString();
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.reservationDateTime = reservationDateTime;
-        this.numberOfPeople = numberOfPeople;
+        this.fullName = reservationData.getFullName();
+        this.phoneNumber = reservationData.getPhoneNumber();
+        this.reservationDateTime = reservationData.getReservationDateTime();
+        this.numberOfPeople = reservationData.getNumberOfPeople();
     }
 
     public String getFullName() {
@@ -55,10 +55,6 @@ public class Reservation {
     public String toString() {
         return "Rezervare: " + fullName + " (" + numberOfPeople + " persoane) - " + reservationDateTime +
                 "\nStatus: " + tableId;
-    }
-
-    public String getReservationId() {
-        return reservationId;
     }
 
     public String getTableId() {

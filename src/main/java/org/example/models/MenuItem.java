@@ -59,10 +59,6 @@ public class MenuItem   {
         isAvailable = available;
     }
 
-    public void setIngredients(HashMap<String,Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -83,49 +79,68 @@ public class MenuItem   {
         return ingredients.get(ingredientName);
     }
 
-    private void interogateUser(){
-        try (Scanner scanner = new Scanner(System.in)){
-            updateType.print();
-            updateType = askUser(scanner);
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
+    public void modifyIngredients(Ingredient ingredient, boolean toAdd, boolean toIngredient, Ingredient myIngredient) {
+        if (toIngredient) {
+            modifyIngredientProperties(ingredient, myIngredient);
+        } else {
+            modifyIngredientList(ingredient, toAdd, myIngredient);
         }
 
+        updateIngredientInJson(myIngredient);
+    }
+
+    private void modifyIngredientList(Ingredient ingredient, boolean toAdd, Ingredient myIngredient) {
+        if (toAdd) {
+            ingredients.remove(myIngredient.getName());
+        } else {
+            ingredients.put(ingredient.getName(), ingredient);
+        }
+    }
+
+    private void modifyIngredientProperties(Ingredient ingredient, Ingredient myIngredient) {
+        interogateUser();
+
+        switch (updateType) {
+            case NAME -> myIngredient.setName(ingredient.getName());
+            case UNIT -> myIngredient.setUnit(ingredient.getUnit());
+            case QUANTITY -> myIngredient.setQuantity(ingredient.getQuantity());
+            case IS_ALLERGEN -> myIngredient.setAllergen(ingredient.isAllergen());
+            case IS_VEGETARIAN -> myIngredient.setVegetarian(ingredient.isVegetarian());
+            case ALL -> myIngredient = ingredient;
+        }
+    }
+
+    private void interogateUser() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            updateType.print();
+            updateType = askUser(scanner);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private IngredientUpdateType askUser(Scanner scanner) {
-        System.out.println("type one of the above, in caps");
-        while (true){
-            try{
+        System.out.println("Type one of the above, in caps:");
+        while (true) {
+            try {
                 return IngredientUpdateType.valueOf(scanner.next());
-            }
-            catch (IllegalArgumentException e){
-                System.out.println("Please enter a valid option from below");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Please enter a valid option from the list above.");
                 updateType.print();
             }
         }
     }
 
-    public void modifyIngredients(Ingredient ingredient, boolean toAdd, boolean toIngredient, Ingredient myIngredient) {
-        if(!toIngredient) {
-            if(!toAdd) {
-                ingredients.put(ingredient.getName(),ingredient);
-            }
-            else {
-                    ingredients.remove(myIngredient.getName());
-            }
-        }
-        else {
-            interogateUser();
-            switch(updateType){
-                case NAME -> myIngredient.setName(ingredient.getName());
-                case UNIT -> myIngredient.setUnit(ingredient.getUnit());
-                case QUANTITY -> myIngredient.setQuantity(ingredient.getQuantity());
-                case IS_ALLERGEN -> myIngredient.setAllergen(ingredient.isAllergen());
-                case IS_VEGETARIAN -> myIngredient.setVegetarian(ingredient.isVegetarian());
-                case ALL -> myIngredient = ingredient;
-            }
-        }
+    private void updateIngredientInJson(Ingredient myIngredient) {
+        JsonUtil.updateElementInJson("ingredients.json", Ingredient.class,
+                ingredient -> ingredient.getName().equals(myIngredient.getName()),
+                ingredient -> {
+                    ingredient.setName(myIngredient.getName());
+                    ingredient.setUnit(myIngredient.getUnit());
+                    ingredient.setQuantity(myIngredient.getQuantity());
+                    ingredient.setAllergen(myIngredient.isAllergen());
+                    ingredient.setVegetarian(myIngredient.isVegetarian());
+                });
+
     }
 }

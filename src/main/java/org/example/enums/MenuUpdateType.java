@@ -7,6 +7,9 @@ public enum MenuUpdateType {
     DESCRIPTION,
     CALORIES,
     AVAILABILITY,
-    NONE,
-    ALL;
+    IS_ALCOHOLIC,
+    VOLUME,
+    CUISINE_TYPE,
+    IS_MAIN_COURSE,
+    IS_DESSERT
 }

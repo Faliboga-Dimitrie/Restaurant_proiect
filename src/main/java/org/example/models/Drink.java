@@ -12,12 +12,6 @@ public class Drink extends MenuItem{
         volume = 0;
     }
 
-    public Drink(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, boolean isAlcoholic, int volume) {
-        super(ingredients, name, description, price, calories,isAvailable);
-        this.isAlcoholic = isAlcoholic;
-        this.volume = volume;
-    }
-
     public Drink(MenuItem menuItem, boolean isAlcoholic, int volume) {
         super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
         this.isAlcoholic = isAlcoholic;

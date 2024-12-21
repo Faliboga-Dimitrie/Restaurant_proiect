@@ -15,7 +15,7 @@ public class RestaurantData {
         website = "";
     }
 
-    public RestaurantData(String name, String address, String phoneNumber, String email, String website, Menu menu) {
+    public RestaurantData(String name, String address, String phoneNumber, String email, String website) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;

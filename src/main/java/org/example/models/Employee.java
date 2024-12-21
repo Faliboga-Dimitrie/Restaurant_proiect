@@ -16,13 +16,6 @@ public class Employee extends Person{
         ID = UUID.randomUUID().toString();
     }
 
-    public Employee(String name, String surname, int age, String phoneNumber, LocalDate dateOfBirth, double salary, LocalDate hireDate) {
-        super(name, surname, age, phoneNumber, dateOfBirth);
-        this.salary = salary;
-        this.hireDate = hireDate;
-        this.ID = UUID.randomUUID().toString();
-    }
-
     public Employee(Person person, double salary, LocalDate hireDate) {
         super(person.getName(), person.getSurname(), person.getAge(), person.getPhoneNumber(), person.getDateOfBirth());
         this.salary = salary;

@@ -8,14 +8,12 @@ public class Table {
     private int numberOfSeats;
     private TableStatus status;
 
-    // Constructor
     public Table(int numberOfSeats) {
         this.tableId = UUID.randomUUID().toString();
         this.numberOfSeats = numberOfSeats;
         this.status = TableStatus.FREE;
     }
 
-    // Getters și Setters
     public int getTableId() {
         return Integer.parseInt(tableId);
     }
@@ -32,13 +30,12 @@ public class Table {
         this.status = status;
     }
 
-    public boolean reserveTable() {
+    public void reserveTable() {
         if (status.equals(TableStatus.FREE)) {
             status = TableStatus.RESERVED;
-            return true;
+            return;
         }
         System.out.println("Masa nu este disponibilă pentru rezervare.");
-        return false;
     }
 
     public boolean occupyTable() {
@@ -51,14 +48,13 @@ public class Table {
         return false;
     }
 
-    public boolean freeTable() {
+    public void freeTable() {
         if (status.equals(TableStatus.OCCUPIED) || status.equals(TableStatus.RESERVED)) {
             status = TableStatus.FREE;
             System.out.println("Masa a fost eliberată.");
-            return true;
+            return;
         }
         System.out.println("Masa nu poate fi eliberată.");
-        return false;
     }
 
     @Override

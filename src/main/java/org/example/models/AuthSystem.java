@@ -23,6 +23,7 @@ public class AuthSystem {
             throw new IllegalArgumentException("Username already exists!");
         }
         users.put(username, new User(username, password, role));
+        JsonUtil.appendToJson(new User(username, password, role), "users.json", User.class);
     }
 
     public void addUser(User user) {
@@ -31,6 +32,7 @@ public class AuthSystem {
 
     public void removeUser(String username) {
         users.remove(username);
+        JsonUtil.removeFromJson("users.json", User.class, item -> item.getUsername().equals(username));
     }
 
     public Map<String, User> getUsers() {

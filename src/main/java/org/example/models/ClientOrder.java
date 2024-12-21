@@ -1,11 +1,13 @@
 package org.example.models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class ClientOrder {
-    private ArrayList<MenuItem> items;
-    private int tableId;
+    private ArrayList<Pair<MenuItem,Integer>> items;
+    private String clientName;
+    private LocalDateTime orderTime;
     private final String orderId;
 
     public ClientOrder() {
@@ -13,51 +15,82 @@ public class ClientOrder {
         this.orderId = UUID.randomUUID().toString();
     }
 
-    public ClientOrder(ArrayList<MenuItem> items, int tableId) {
-        this.items = items;
-        this.tableId = tableId;
+    public ClientOrder(String clientName, LocalDateTime orderTime) {
+        this.clientName = clientName;
+        this.orderTime = orderTime;
+        items = new ArrayList<>();
         this.orderId = UUID.randomUUID().toString();
     }
 
-    public ClientOrder(ArrayList<MenuItem> items) {
-        this.items = items;
-        this.orderId = UUID.randomUUID().toString();
-    }
-
-    public ArrayList<MenuItem> getItems() {
+    public ArrayList<Pair<MenuItem,Integer>> getItems() {
         return items;
     }
 
-    public void setItems(ArrayList<MenuItem> items) {
+    public void setItems(ArrayList<Pair<MenuItem,Integer>> items) {
         this.items = items;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
     }
 
     public int getOrderId() {
         return Integer.parseInt(orderId);
     }
 
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        for (Pair<MenuItem, Integer> pair : items) {
+            totalPrice += pair.getFirst().getPrice() * pair.getSecond();
+        }
+        return totalPrice;
+    }
+
+    public int getQuantity(MenuItem item) {
+        for (Pair<MenuItem, Integer> pair : items) {
+            if (pair.getFirst().equals(item)) {
+                return pair.getSecond();
+            }
+        }
+        return 0;
+    }
+
+    public void addItem(MenuItem item, int quantity) {
+        items.add(new Pair<>(item, quantity));
+    }
+
+    public void removeItem(MenuItem item, int quantity) {
+        items.remove(new Pair<>(item, quantity));
+    }
+
     @Override
     public String toString() {
         return "ClientOrder{" +
-                "items=" + items +
-                ", tableId=" + tableId +
-                ", orderId=" + orderId +
+                "clientName='" + clientName + '\'' +
+                ", items=" + items +
+                ", orderTime=" + orderTime +
+                ", orderId='" + orderId + '\'' +
                 '}';
     }
 
-    public void addItem(MenuItem item) {
-        items.add(item);
+    public String getClientName() {
+        return clientName;
     }
 
-    public void removeItem(MenuItem item) {
-        items.remove(item);
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public void changeQuantity(MenuItem item, int quantity) {
+        for (Pair<MenuItem, Integer> pair : items) {
+            if (pair.getFirst().equals(item)) {
+                pair.setSecond(quantity);
+                return;
+            }
+        }
     }
 }

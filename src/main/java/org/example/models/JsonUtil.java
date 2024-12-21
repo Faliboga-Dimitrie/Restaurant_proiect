@@ -11,11 +11,9 @@ import java.util.function.Consumer;
 
 public class JsonUtil {
 
-    // Metodă generică pentru a salva datele într-un fișier JSON
     public static <T> void saveToJson(List<T> items, String fileName) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            // Salvează lista de obiecte într-un fișier JSON
             mapper.writeValue(new File(fileName), items);
             System.out.println("Datele au fost salvate în fisierul " + fileName);
         } catch (IOException e) {
@@ -24,6 +22,27 @@ public class JsonUtil {
     }
 
     public static <T> void appendToJson(List<T> items, String fileName, Class<T> clazz) {
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File(fileName);
+
+        try {
+            List<T> existingItems = new ArrayList<>();
+            if (file.exists() && file.length() > 0) {
+                existingItems = mapper.readValue(
+                        file,
+                        mapper.getTypeFactory().constructCollectionType(List.class, clazz)
+                );
+            }
+            existingItems.addAll(items);
+            mapper.writeValue(file, existingItems);
+
+            System.out.println("Datele au fost adăugate în fișierul " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T> void appendToJson(T item, String fileName, Class<T> clazz) {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File(fileName);
 
@@ -38,27 +57,25 @@ public class JsonUtil {
                         mapper.getTypeFactory().constructCollectionType(List.class, clazz)
                 );
             }
-            // Adăugăm noile elemente la lista existentă
-            existingItems.addAll(items);
+
+            // Adăugăm noul element la lista existentă
+            existingItems.add(item);
 
             // Scriem lista actualizată înapoi în fișier
             mapper.writeValue(file, existingItems);
 
-            System.out.println("Datele au fost adăugate în fișierul " + fileName);
+            System.out.println("Obiectul a fost adăugat în fișierul " + fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Metodă generică pentru a încărca datele dintr-un fișier JSON
     public static <T> List<T> loadFromJson(String fileName, Class<T> clazz) {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File(fileName);
 
-        // Verificăm dacă fișierul există și nu este gol
         if (file.exists() && file.length() > 0) {
             try {
-                // Citește datele din fișierul JSON și le deserializați într-o listă de obiecte de tipul T
                 return mapper.readValue(
                         file,
                         mapper.getTypeFactory().constructCollectionType(List.class, clazz)
@@ -69,7 +86,7 @@ public class JsonUtil {
         } else {
             System.out.println("Fișierul JSON este gol sau nu există.");
         }
-        return null; // Dacă fișierul nu există sau este gol, returnăm null
+        return null;
     }
 
     public static <T> void removeFromJson(String fileName, Class<T> clazz, Predicate<T> condition) {
@@ -110,20 +127,17 @@ public class JsonUtil {
         File file = new File(fileName);
 
         try {
-            // 1. Citește lista de obiecte din JSON
-            List<T> items = mapper.readValue(file, new TypeReference<List<T>>() {});
+            List<T> items = mapper.readValue(file, new TypeReference<>() {});
 
-            // 2. Găsește obiectul și aplică modificările
             boolean updated = false;
             for (T item : items) {
                 if (condition.test(item)) {
                     updater.accept(item);
                     updated = true;
-                    break; // Ieșim dacă am găsit obiectul de modificat
+                    break;
                 }
             }
 
-            // 3. Salvează lista actualizată în JSON
             if (updated) {
                 mapper.writeValue(file, items);
                 System.out.println("Element updated successfully!");

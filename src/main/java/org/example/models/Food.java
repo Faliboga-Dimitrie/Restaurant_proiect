@@ -4,36 +4,21 @@ import java.util.HashMap;
 
 public class Food extends MenuItem{
     private String cuisineType;
-    private boolean isAppetizer;
     private boolean isMainCourse;
     private boolean isDessert;
-    private boolean isSideDish;
 
     public Food() {
         super();
         cuisineType = "";
-        isAppetizer = false;
         isMainCourse = false;
         isDessert = false;
-        isSideDish = false;
     }
 
-    public Food(HashMap<String,Ingredient> ingredients, String name, String description, int price, int calories, boolean isAvailable, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
-        super(ingredients, name, description, price, calories, isAvailable);
-        this.cuisineType = cuisineType;
-        this.isAppetizer = isAppetizer;
-        this.isMainCourse = isMainCourse;
-        this.isDessert = isDessert;
-        this.isSideDish = isSideDish;
-    }
-
-    public Food(MenuItem menuItem, String cuisineType, boolean isAppetizer, boolean isMainCourse, boolean isDessert, boolean isSideDish) {
+    public Food(MenuItem menuItem, String cuisineType, boolean isMainCourse, boolean isDessert) {
         super(menuItem.getIngredients(), menuItem.getName(), menuItem.getDescription(), menuItem.getPrice(), menuItem.getCalories(), menuItem.isAvailable());
         this.cuisineType = cuisineType;
-        this.isAppetizer = isAppetizer;
         this.isMainCourse = isMainCourse;
         this.isDessert = isDessert;
-        this.isSideDish = isSideDish;
     }
 
     public String getCuisineType() {
@@ -42,14 +27,6 @@ public class Food extends MenuItem{
 
     public void setCuisineType(String cuisineType) {
         this.cuisineType = cuisineType;
-    }
-
-    public boolean isAppetizer() {
-        return isAppetizer;
-    }
-
-    public void setAppetizer(boolean appetizer) {
-        isAppetizer = appetizer;
     }
 
     public boolean isMainCourse() {
@@ -68,27 +45,14 @@ public class Food extends MenuItem{
         isDessert = dessert;
     }
 
-    public boolean isSideDish() {
-        return isSideDish;
-    }
-
-    public void setSideDish(boolean sideDish) {
-        isSideDish = sideDish;
-    }
-
     @Override
     public String toString() {
         String type = "";
-        if(isAppetizer)
-            type = "Appetizer";
-        else if (isMainCourse) {
+         if (isMainCourse) {
             type = "Main Course";
         }
         else if (isDessert) {
             type = "Dessert";
-        }
-        else if (isSideDish) {
-            type = "Side Dish";
         }
         return "FoodItem{" +
                 "isAvailable=" + isAvailable +

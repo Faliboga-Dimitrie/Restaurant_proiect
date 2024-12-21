@@ -13,11 +13,14 @@ public class Staff {
         employees = new ArrayList<>();
     }
 
-    public void addEmployee(Employee employee) {
+    public void addEmployee(Employee employee, boolean fromJson) {
         employees.add(employee);
         int index = employees.size() - 1;
         employeesById.put(employee.getID(),index);
         employeesByName.put(employee.getName() + employee.getSurname(),index);
+        if (!fromJson) {
+            JsonUtil.appendToJson(employee, "employees.json", Employee.class);
+        }
     }
 
     public void removeEmployee(int id) {
@@ -25,6 +28,8 @@ public class Staff {
         if (employee == null) {
             return;
         }
+
+        JsonUtil.removeFromJson("employees.json", Employee.class, item -> item.getID() == id);
         employees.remove((int) employeesById.get(id));
         employeesById.remove(id);
         employeesByName.get(employee.getName());
@@ -35,6 +40,8 @@ public class Staff {
         if (employee == null) {
             return;
         }
+
+        JsonUtil.removeFromJson("employees.json", Employee.class, item -> item.getName().equals(name));
         employees.remove((int) employeesByName.get(name));
         employeesById.remove(employee.getID());
         employeesByName.remove(name);
@@ -50,54 +57,97 @@ public class Staff {
         return index != null ? employees.get(index) : null;
     }
 
-    public <T> void updateEmployee(String Name, String Surname, T value, EmployeeUpdateType field) {
-        Employee employee = findEmployeeByName(Name+Surname);
+    public <T> void updateEmployee(String name, String surname, T value, EmployeeUpdateType field) {
+        Employee employee = findEmployeeByName(name + surname);
         int index;
+
         if (employee == null) {
+            System.out.println("Employee not found.");
             return;
         }
+
         switch (field) {
             case NAME:
                 index = employeesByName.get(employee.getName() + employee.getSurname());
                 employeesByName.remove(employee.getName() + employee.getSurname());
                 employee.setName((String) value);
                 employeesByName.put(employee.getName() + employee.getSurname(), index);
+
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setName((String) value)
+                );
                 break;
+
             case SURNAME:
                 index = employeesByName.get(employee.getName() + employee.getSurname());
                 employeesByName.remove(employee.getName() + employee.getSurname());
                 employee.setSurname((String) value);
                 employeesByName.put(employee.getName() + employee.getSurname(), index);
+
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setSurname((String) value)
+                );
                 break;
+
             case AGE:
                 employee.setAge((int) value);
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setAge((int) value)
+                );
                 break;
+
             case PHONE_NUMBER:
                 employee.setPhoneNumber((String) value);
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setPhoneNumber((String) value)
+                );
                 break;
+
             case DATE_OF_BIRTH:
                 employee.setDateOfBirth((LocalDate) value);
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setDateOfBirth((LocalDate) value)
+                );
                 break;
+
             case SALARY:
                 employee.setSalary((double) value);
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setSalary((double) value)
+                );
                 break;
+
             case HIRED_DATE:
                 employee.setHireDate((LocalDate) value);
+                JsonUtil.updateElementInJson(
+                        "employees.json",
+                        Employee.class,
+                        item -> item.getName().equals(name) && item.getSurname().equals(surname),
+                        item -> item.setHireDate((LocalDate) value)
+                );
                 break;
-            default:
-                break;
-        }
-    }
 
-    private <T> List<Employee> getEmployeesByField(HashMap<T, List<Integer>> fieldMap, T field) {
-        List<Integer> indices = fieldMap.get(field);
-        if (indices == null) {
-            return null;
+            default:
+                System.out.println("Unknown field.");
+                break;
         }
-        List<Employee> employees = new ArrayList<>();
-        for (int index : indices) {
-            employees.add(this.employees.get(index));
-        }
-        return employees;
     }
 }
