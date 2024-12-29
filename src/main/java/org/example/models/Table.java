@@ -1,21 +1,24 @@
 package org.example.models;
 
-import java.util.UUID;
 import org.example.enums.TableStatus;
 
 public class Table {
-    private final String tableId;
+    private int tableNumber;
     private int numberOfSeats;
     private TableStatus status;
 
-    public Table(int numberOfSeats) {
-        this.tableId = UUID.randomUUID().toString();
+    public Table() {
+        this.status = TableStatus.FREE;
+    }
+
+    public Table(int numberOfSeats,int tableNumber) {
+        this.tableNumber = tableNumber;
         this.numberOfSeats = numberOfSeats;
         this.status = TableStatus.FREE;
     }
 
-    public int getTableId() {
-        return Integer.parseInt(tableId);
+    public int getTableNumber() {
+        return tableNumber;
     }
 
     public int getNumberOfSeats() {
@@ -59,10 +62,14 @@ public class Table {
 
     @Override
     public String toString() {
-        return "Masa " + tableId + status + " - Locuri: " + numberOfSeats;
+        return "Masa " + tableNumber + " " + status + " - Locuri: " + numberOfSeats;
     }
 
     public void setNumberOfSeats(int numberOfSeats) {
         this.numberOfSeats = numberOfSeats;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
     }
 }

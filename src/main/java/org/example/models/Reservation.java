@@ -4,15 +4,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Reservation {
-    private final String reservationId;
+    private static int nextId = 1;
+    private final int reservationId;
     private String fullName;
     private String phoneNumber;
     private LocalDateTime reservationDateTime;
     private int numberOfPeople;
-    private String tableId;
+    private int tableId;
+
+    public Reservation() {
+        this.reservationId = nextId++;
+    }
 
     public Reservation(ReservationData reservationData) {
-        this.reservationId = UUID.randomUUID().toString();
+        this.reservationId = nextId++;
         this.fullName = reservationData.getFullName();
         this.phoneNumber = reservationData.getPhoneNumber();
         this.reservationDateTime = reservationData.getReservationDateTime();
@@ -57,11 +62,11 @@ public class Reservation {
                 "\nStatus: " + tableId;
     }
 
-    public String getTableId() {
+    public int getTableId() {
         return tableId;
     }
 
-    public void setTableId(String tableId) {
+    public void setTableId(int tableId) {
         this.tableId = tableId;
     }
 }

@@ -1,26 +1,25 @@
 package org.example.models;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Employee extends Person{
     private double salary;
     private LocalDate hireDate;
-    private final String ID;
+    @JsonProperty("id")
+    private int ID;
 
     public Employee() {
         super();
         salary = 0;
         hireDate = LocalDate.now();
-        ID = UUID.randomUUID().toString();
     }
 
-    public Employee(Person person, double salary, LocalDate hireDate) {
+    public Employee(Person person, double salary, LocalDate hireDate, int ID) {
         super(person.getName(), person.getSurname(), person.getAge(), person.getPhoneNumber(), person.getDateOfBirth());
         this.salary = salary;
         this.hireDate = hireDate;
-        this.ID = UUID.randomUUID().toString();
+        this.ID = ID;
     }
 
     public double getSalary() {
@@ -51,15 +50,7 @@ public class Employee extends Person{
                 '}';
     }
 
-    public void longevity() {
-        System.out.println("Employee " + name + " " + surname + " has been working for " + (LocalDate.now().getYear() - hireDate.getYear()) + " years, and " + (LocalDate.now().getMonthValue() - hireDate.getMonthValue()) + " months.");
-    }
-
-    public Period getLongevity() {
-        return Period.between(hireDate, LocalDate.now());
-    }
-
     public int getID() {
-        return Integer.parseInt(ID);
+        return ID;
     }
 }

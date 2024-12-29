@@ -8,6 +8,13 @@ public class ReservationData {
     private LocalDateTime reservationDateTime;
     private int numberOfPeople;
 
+    ReservationData() {
+        fullName = "";
+        phoneNumber = "";
+        reservationDateTime = LocalDateTime.now();
+        numberOfPeople = 0;
+    }
+
     public ReservationData(String fullName,String phoneNumber, LocalDateTime reservationDateTime, int numberOfPeople) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;

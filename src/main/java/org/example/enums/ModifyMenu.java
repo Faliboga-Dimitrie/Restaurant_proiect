@@ -4,5 +4,6 @@ public enum ModifyMenu {
     ADD_ITEM,
     REMOVE_ITEM,
     UPDATE_ITEM,
+    SHOW_MENU,
     EXIT
 }

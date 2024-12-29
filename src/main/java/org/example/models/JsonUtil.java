@@ -2,6 +2,8 @@ package org.example.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -44,24 +46,22 @@ public class JsonUtil {
 
     public static <T> void appendToJson(T item, String fileName, Class<T> clazz) {
         ObjectMapper mapper = new ObjectMapper();
+
+        // Înregistrează JavaTimeModule pentru a gestiona tipurile java.time
+        mapper.registerModule(new JavaTimeModule());
+
         File file = new File(fileName);
 
         try {
             List<T> existingItems = new ArrayList<>();
-
-            // Verificăm dacă fișierul există și nu este gol
             if (file.exists() && file.length() > 0) {
-                // Citim datele existente din fișier
                 existingItems = mapper.readValue(
                         file,
                         mapper.getTypeFactory().constructCollectionType(List.class, clazz)
                 );
             }
-
-            // Adăugăm noul element la lista existentă
             existingItems.add(item);
 
-            // Scriem lista actualizată înapoi în fișier
             mapper.writeValue(file, existingItems);
 
             System.out.println("Obiectul a fost adăugat în fișierul " + fileName);
@@ -72,6 +72,7 @@ public class JsonUtil {
 
     public static <T> List<T> loadFromJson(String fileName, Class<T> clazz) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // Adaugă suport pentru LocalDate/LocalDateTime
         File file = new File(fileName);
 
         if (file.exists() && file.length() > 0) {
@@ -91,24 +92,21 @@ public class JsonUtil {
 
     public static <T> void removeFromJson(String fileName, Class<T> clazz, Predicate<T> condition) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // Adaugă suport pentru LocalDate/LocalDateTime
         File file = new File(fileName);
 
         try {
             List<T> items = new ArrayList<>();
 
-            // Verificăm dacă fișierul există și nu este gol
             if (file.exists() && file.length() > 0) {
-                // Citește lista de elemente existente
                 items = mapper.readValue(
                         file,
                         mapper.getTypeFactory().constructCollectionType(List.class, clazz)
                 );
             }
 
-            // Filtrăm elementele, păstrând doar cele care nu satisfac condiția
             items.removeIf(condition);
 
-            // Rescriem lista actualizată în fișier
             mapper.writeValue(file, items);
 
             System.out.println("Elementul a fost eliminat (dacă a existat) din fișierul " + fileName);
@@ -124,10 +122,14 @@ public class JsonUtil {
             Consumer<T> updater) {
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // Adaugă suport pentru LocalDate/LocalDateTime
         File file = new File(fileName);
 
         try {
-            List<T> items = mapper.readValue(file, new TypeReference<>() {});
+            List<T> items = mapper.readValue(
+                    file,
+                    mapper.getTypeFactory().constructCollectionType(List.class, clazz)
+            );
 
             boolean updated = false;
             for (T item : items) {
@@ -144,9 +146,9 @@ public class JsonUtil {
             } else {
                 System.out.println("No element matching the condition was found.");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

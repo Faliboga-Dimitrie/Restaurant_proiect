@@ -150,4 +150,8 @@ public class Staff {
                 break;
         }
     }
+
+    public ArrayList<Employee> getEmployees() {
+        return employees;
+    }
 }
