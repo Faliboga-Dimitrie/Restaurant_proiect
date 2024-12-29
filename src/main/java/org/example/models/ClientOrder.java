@@ -73,7 +73,7 @@ public class ClientOrder {
 
     public void addItem(MenuItem item, int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Cantitatea trebuie să fie mai mare decât 0.");
+            throw new IllegalArgumentException("The quantity must be greater than 0.");
         }
 
         switch (item) {
@@ -109,9 +109,8 @@ public class ClientOrder {
                 return;
             }
         }
-        System.out.println("Itemul nu a fost găsit în colecție.");
+        System.out.println("The item was not found in the collection.");
     }
-
 
     public String getClientName() {
         return clientName;

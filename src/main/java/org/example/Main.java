@@ -542,7 +542,7 @@ public class Main {
         }while (true);
     }
 
-    public static void modifyRestaurantOptions(Restaurant restaurant, AuthSystem authSystem,Scanner scanner) {
+    public static void modifyRestaurantOptions(Restaurant restaurant, Scanner scanner) {
         int option;
         do {
             ModifyRestaurant[] modifyRestaurants = ModifyRestaurant.values();
@@ -586,7 +586,7 @@ public class Main {
         }while (true);
     }
 
-    public static void mainConsoleIO(Role role, Restaurant restaurant, AuthSystem authSystem) {
+    public static void mainConsoleIO(Role role, Restaurant restaurant) {
         Scanner scanner = new Scanner(System.in);
         String clientName;
         int option;
@@ -721,7 +721,7 @@ public class Main {
                         AdminOptions adminOptions = AdminOptions.values()[option - 1];
                         switch (adminOptions){
                             case MODIFY_RESTAURANT:
-                                modifyRestaurantOptions(restaurant, authSystem,scanner);
+                                modifyRestaurantOptions(restaurant,scanner);
                                 break;
                             case VIEW_ALL_RESERVATIONS:
                                 restaurant.getReservations().forEach(System.out::println);
@@ -804,7 +804,7 @@ public class Main {
         }
 
         if (authSystem.getCurrentUser() != null) {
-            mainConsoleIO(authSystem.getCurrentUser().getRole(), restaurant, authSystem);
+            mainConsoleIO(authSystem.getCurrentUser().getRole(), restaurant);
         }
     }
 }

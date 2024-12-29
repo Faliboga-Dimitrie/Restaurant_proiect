@@ -17,7 +17,7 @@ public class JsonUtil {
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writeValue(new File(fileName), items);
-            System.out.println("Datele au fost salvate în fisierul " + fileName);
+            System.out.println("The data has been saved to the file " + fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class JsonUtil {
             existingItems.addAll(items);
             mapper.writeValue(file, existingItems);
 
-            System.out.println("Datele au fost adăugate în fișierul " + fileName);
+            System.out.println("The data has been saved to the file " + fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class JsonUtil {
 
             mapper.writeValue(file, existingItems);
 
-            System.out.println("Obiectul a fost adăugat în fișierul " + fileName);
+            System.out.println("The object has been added to the file " + fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class JsonUtil {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Fișierul JSON este gol sau nu există.");
+            System.out.println("The JSON file is empty or does not exist.");
         }
         return null;
     }

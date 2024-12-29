@@ -47,12 +47,13 @@ public class Restaurant {
         int numberOfPeople = reservationData.getNumberOfPeople();
 
         if (reservationByPersonName.containsKey(fullName) || reservationByDateTime.containsKey(reservationDateTime)) {
-            System.out.println("Rezervarea nu a putut fi efectuată. Există deja o rezervare cu același nume sau aceeași dată și oră.");
+            System.out.println("The reservation could not be made. " +
+                    "There is already a reservation with the same name or the same date and time.");
             return;
         }
 
         if (!tablesByStatus.containsKey(TableStatus.FREE) || tablesByStatus.get(TableStatus.FREE).isEmpty()) {
-            System.out.println("Rezervarea nu a putut fi efectuată. Nu există mese libere.");
+            System.out.println("The reservation could not be made. There are no available tables.");
             return;
         }
 
@@ -72,11 +73,11 @@ public class Restaurant {
 
                 JsonUtil.appendToJson(newReservation, "reservations.json", Reservation.class);
 
-                System.out.println("Rezervarea a fost efectuată cu succes.");
+                System.out.println("The reservation has been successfully made.");
                 return;
             }
         }
-        System.out.println("Rezervarea nu a putut fi efectuată. Nu există mese cu numărul de locuri necesar.");
+        System.out.println("The reservation could not be made. There are no tables with the required number of seats.");
     }
 
     private void updateTableStatus(int tableIndex) {
@@ -86,7 +87,7 @@ public class Restaurant {
 
     public void cancelReservation(String fullName) {
         if (!reservationByPersonName.containsKey(fullName)) {
-            System.out.println("Rezervarea nu a putut fi anulată. O rezervare cu acest nume nu există.");
+            System.out.println("The reservation could not be canceled. A reservation with this name does not exist.");
             return;
         }
 
@@ -165,7 +166,7 @@ public class Restaurant {
 
     public void removeTable(int tableId) {
         if (!tablesByNumber.containsKey(tableId)) {
-            System.out.println("Masa nu a putut fi ștearsă. Masa cu acest ID nu există.");
+            System.out.println("The table could not be deleted. A table with this ID does not exist.");
             return;
         }
 
@@ -216,7 +217,7 @@ public class Restaurant {
 
     public void updateTableStatus(int tableId, TableStatus newStatus) {
         if (!tablesByNumber.containsKey(tableId)) {
-            System.out.println("Masa nu a putut fi actualizată. Masa cu acest ID nu există.");
+            System.out.println("The table could not be updated. A table with this ID does not exist.");
             return;
         }
 
@@ -251,7 +252,7 @@ public class Restaurant {
 
     public ClientOrder findOrderByClientName(String clientName){
         if(!ordersByName.containsKey(clientName)){
-            System.out.println("Comanda cu acest nume nu există.");
+            System.out.println("The order with this name does not exist.");
             return null;
         }
         return orders.get(ordersByName.get(clientName));
@@ -259,7 +260,7 @@ public class Restaurant {
 
     public ClientOrder findOrderByDateTime(LocalDateTime dateTime){
         if(!ordersByDateTime.containsKey(dateTime)){
-            System.out.println("Comanda la această dată și oră nu există.");
+            System.out.println("The order for this date and time does not exist.");
             return null;
         }
         return orders.get(ordersByDateTime.get(dateTime));
@@ -281,7 +282,7 @@ public class Restaurant {
         } else if (dateTime_or_Name instanceof String name) {
             removeOrderByName(name);
         } else {
-            System.out.println("Tipul de identificator nu este valid.");
+            System.out.println("The identifier type is not valid.");
             return;
         }
 
@@ -297,7 +298,7 @@ public class Restaurant {
 
     private void removeOrderByDateTime(LocalDateTime dateTime) {
         if (!ordersByDateTime.containsKey(dateTime)) {
-            System.out.println("Comanda la această dată și oră nu există.");
+            System.out.println("There is no order for this date and time.");
             return;
         }
         int orderIndex = ordersByDateTime.get(dateTime);
@@ -306,7 +307,7 @@ public class Restaurant {
 
     private void removeOrderByName(String name) {
         if (!ordersByName.containsKey(name)) {
-            System.out.println("Comanda cu acest nume nu există.");
+            System.out.println("No order exists with this name.");
             return;
         }
         int orderIndex = ordersByName.get(name);
@@ -328,7 +329,7 @@ public class Restaurant {
         // Reindexare
         reindexOrders();
 
-        System.out.println("Comanda a fost eliminată cu succes.");
+        System.out.println("The order has been successfully removed.");
     }
 
     private void reindexOrders() {
@@ -344,7 +345,7 @@ public class Restaurant {
 
     public Reservation findReservationByPersonName(String fullName){
         if(!reservationByPersonName.containsKey(fullName)){
-            System.out.println("Rezervarea cu acest nume nu există.");
+            System.out.println("No reservation exists with this name.");
             return null;
         }
         return reservations.get(reservationByPersonName.get(fullName));
@@ -352,7 +353,7 @@ public class Restaurant {
 
     public Reservation findReservationByDateTime(LocalDateTime dateTime){
         if(!reservationByDateTime.containsKey(dateTime)){
-            System.out.println("Rezervarea la această dată și oră nu există.");
+            System.out.println("There is no reservation for this date and time.");
             return null;
         }
         return reservations.get(reservationByDateTime.get(dateTime));

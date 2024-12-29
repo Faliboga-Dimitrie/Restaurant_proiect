@@ -38,26 +38,26 @@ public class Table {
             status = TableStatus.RESERVED;
             return;
         }
-        System.out.println("Masa nu este disponibilă pentru rezervare.");
+        System.out.println("The table is not available for reservation.");
     }
 
     public boolean occupyTable() {
         if (status.equals(TableStatus.RESERVED) || status.equals(TableStatus.FREE)) {
             status = TableStatus.OCCUPIED;
-            System.out.println("Masa a fost ocupată.");
+            System.out.println("The table has been occupied.");
             return true;
         }
-        System.out.println("Masa nu poate fi ocupată.");
+        System.out.println("The table cannot be occupied.");
         return false;
     }
 
     public void freeTable() {
         if (status.equals(TableStatus.OCCUPIED) || status.equals(TableStatus.RESERVED)) {
             status = TableStatus.FREE;
-            System.out.println("Masa a fost eliberată.");
+            System.out.println("The table has been vacated.");
             return;
         }
-        System.out.println("Masa nu poate fi eliberată.");
+        System.out.println("The table cannot be vacated.");
     }
 
     @Override
