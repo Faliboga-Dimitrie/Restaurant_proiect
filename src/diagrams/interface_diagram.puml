@@ -1,0 +1,110 @@
+@startuml
+
+interface IAuthSystem {
+    +register(username: String, password: String, role: Role)
+    +authenticate(username: String, password: String): User
+    +addUser(user: User)
+    +removeUser(username: String)
+}
+
+interface IClientOrder {
+    +addItem(item: MenuItem, quantity: int)
+    +removeItem(item: MenuItem, quantity: int)
+    +getClientName(): String
+    +getOrderTime(): LocalDateTime
+}
+
+interface IMenu {
+    +addDrink(drink: Drink, fromJson: boolean)
+    +addFood(food: Food, fromJson: boolean)
+    +removeDrink(drink: Drink)
+    +removeFood(food: Food)
+    +findMenuItemByName(name: String): MenuItem
+    +displayMenu()
+}
+
+interface IMenuItem {
+    +getName(): String
+    +getPrice(): double
+    +getIngredients(): HashMap<String, Ingredient>
+}
+
+interface IPair<T,U> {
+    +getFirst(): T
+    +getSecond(): U
+    +setFirst(first: T)
+    +setSecond(second: U)
+}
+
+interface IReservation {
+    +getFullName(): String
+    +getReservationDateTime(): LocalDateTime
+    +getPhoneNumber(): String
+    +getNumberOfPeople(): int
+    +getTableId(): int
+}
+
+interface IRestaurant {
+    +getMenu(): Menu
+    +getStaff(): Staff
+    +getReservations(): ArrayList<Reservation>
+    +getTables(): ArrayList<Table>
+    +getOrders(): ArrayList<ClientOrder>
+    +getRestaurantData(): RestaurantData
+    +addReservation(reservation: Reservation)
+    +makeReservation(reservationData: ReservationData)
+    +cancelReservation(fullName: String)
+    +findReservationByPersonName(fullName: String): Reservation
+    +findReservationByDateTime(dateTime: LocalDateTime): Reservation
+    +addTable(numberOfSeats: int, tableNumber: int, fromJson: boolean)
+    +addTable(table: Table)
+    +updateTableStatus(tableId: int, newStatus: TableStatus)
+    +removeTable(tableId: int)
+    +findTableByNumber(tableId: int): Table
+    +findOrderByClientName(clientName: String): ClientOrder
+    +findOrderByDateTime(dateTime: LocalDateTime): ClientOrder
+    +addOrder(dateTime: LocalDateTime, order: ClientOrder, fromJson: boolean)
+    +removeOrder(dateTime_or_Name: Object)
+}
+
+interface IStaff {
+    +addEmployee(employee: Employee, fromJson: boolean)
+    +removeEmployee(name: String)
+    +findEmployeeByName(name: String): Employee
+    +getEmployees(): ArrayList<Employee>
+}
+
+interface ITable {
+    +reserveTable()
+    +occupyTable()
+    +freeTable()
+}
+
+interface IUser {
+    +getUsername(): String
+    +getPassword(): String
+    +setUsername(username: String)
+    +setPassword(password: String)
+}
+
+AuthSystem ..|> IAuthSystem
+ClientOrder ..|> IClientOrder
+Menu ..|> IMenu
+MenuItem ..|> IMenuItem
+Pair ..|> IPair
+Reservation ..|> IReservation
+Restaurant ..|> IRestaurant
+Staff ..|> IStaff
+Table ..|> ITable
+User ..|> IUser
+
+IAuthSystem ..|> IUser
+IRestaurant ..|> IClientOrder
+IClientOrder ..|> IPair
+IMenu ..|> IMenuItem
+IRestaurant ..|> IReservation
+IRestaurant ..|> IMenu
+IRestaurant ..|> IStaff
+IRestaurant ..|> ITable
+
+@enduml

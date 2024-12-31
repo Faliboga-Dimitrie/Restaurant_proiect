@@ -8,7 +8,4 @@ public interface IAuthSystem {
     User authenticate(String username, String password);
     void addUser(User user);
     void removeUser(String username);
-    boolean isAdmin(String username);
-    User getCurrentUser();
-    void setCurrentUser(User currentUser);
 }
