@@ -9,5 +9,4 @@ public enum AdminOptions {
     VIEW_ALL_PRODUCTS,
     VIEW_RESTAURANT_DETAILS,
     EXIT
-
 }

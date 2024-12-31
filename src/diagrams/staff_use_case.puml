@@ -1,0 +1,13 @@
+@startuml
+actor Admin
+
+(Admin) --> (Modify Restaurant)
+(Admin) --> (View All Reservations)
+(Admin) --> (View All Orders)
+(Admin) --> (View All Employees)
+(Admin) --> (View All Tables)
+(Admin) --> (View All Products)
+(Admin) --> (View Restaurant Details)
+(Admin) --> (Exit)
+
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+actor Client
+
+Client --> (Make Reservation)
+Client --> (Cancel Reservation)
+Client --> (View Menu)
+Client --> (Make Order)
+Client --> (View Order)
+Client --> (Cancel Order)
+Client --> (Exit)
+@enduml

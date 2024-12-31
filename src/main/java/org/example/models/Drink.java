@@ -1,7 +1,5 @@
 package org.example.models;
 
-import java.util.HashMap;
-
 public class Drink extends MenuItem{
     private boolean isAlcoholic;
     private int volume;

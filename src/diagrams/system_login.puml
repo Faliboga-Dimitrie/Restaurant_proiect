@@ -1,0 +1,10 @@
+@startuml
+participant User
+participant AuthSystem
+participant UsersJson
+
+User -> AuthSystem : sendCredentials(username, password)
+AuthSystem -> UsersJson : checkCredentials(username, password)
+UsersJson --> AuthSystem : returnUser(user)
+AuthSystem --> User : returnUserDetails(user)
+@enduml

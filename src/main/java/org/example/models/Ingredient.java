@@ -7,7 +7,6 @@ public class Ingredient {
     private boolean isVegetarian;
     private boolean isAllergen;
 
-
     public Ingredient() {
         quantity = 0;
         isVegetarian = false;

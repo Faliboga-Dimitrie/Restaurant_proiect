@@ -1,0 +1,122 @@
+@startuml
+
+class Person {
+  +String name
+  +String surname
+  +int age
+  +String phoneNumber
+  +LocalDate dateOfBirth
+}
+
+class Employee {
+  +double salary
+  +LocalDate hireDate
+  +int ID
+}
+
+Employee --|> Person
+
+class AuthSystem {
+  +Map<String, User> users
+  +User currentUser
+}
+
+class User {
+  +String username
+  +String password
+  +Role role
+}
+
+AuthSystem o-- User : has
+
+class Reservation {
+  +String fullName
+  +String phoneNumber
+  +LocalDateTime reservationDateTime
+  +int numberOfPeople
+  +int tableId
+}
+
+class Table {
+  +int tableNumber
+  +int numberOfSeats
+  +TableStatus status
+}
+
+Reservation -- Table : isFor
+
+class MenuItem {
+  +HashMap<String, Ingredient> ingredients
+  +String name
+  +String description
+  +double price
+  +int calories
+  +boolean isAvailable
+}
+
+class Drink {
+  +boolean isAlcoholic
+  +int volume
+}
+
+class Food {
+  +String cuisineType
+  +boolean isMainCourse
+  +boolean isDessert
+}
+
+MenuItem <|-- Drink
+MenuItem <|-- Food
+
+class Restaurant {
+  +RestaurantData restaurantData
+  +Menu menu
+  +Staff staff
+}
+
+class RestaurantData {
+  +String name
+  +String address
+  +String phoneNumber
+  +String email
+  +String website
+}
+
+class Menu {
+   +ArrayList<Drink> drinks;
+   +ArrayList<Food> foods;
+   +boolean toAdd;
+   +boolean toIngredient;
+}
+
+class Staff {
+  +ArrayList<Employee> employees
+}
+
+Staff *-- Employee : has
+
+Restaurant *-- RestaurantData : has
+Restaurant *-- Menu : has
+Restaurant o-- Table : provides
+Restaurant o-- Reservation : manages
+Restaurant o-- Staff : employs
+
+class Ingredient {
+  +String name
+  +double price
+  +int calories
+}
+
+MenuItem *-- Ingredient : contains
+Menu *-- Drink : contains
+Menu *-- Food : contains
+
+class Main {
+  +Restaurant restaurant
+  +AuthSystem authSystem
+}
+
+Main *-- Restaurant : has
+Main *-- AuthSystem : has
+
+@enduml

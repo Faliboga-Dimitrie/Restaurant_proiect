@@ -1,0 +1,12 @@
+@startuml
+participant User
+participant AuthSystem
+participant UsersJson
+
+User -> AuthSystem : sendCredentials(username, password, Role)
+AuthSystem -> AuthSystem : validateRole(Role)
+AuthSystem -> User : returnRole(success/failure)
+AuthSystem -> UsersJson : AddUser(username, password, Role)
+UsersJson --> AuthSystem : returnUser(success/failure)
+AuthSystem --> User : returnUserDetails(success/failure)
+@enduml

@@ -1,7 +1,5 @@
 package org.example.models;
 
-import java.util.HashMap;
-
 public class Food extends MenuItem{
     private String cuisineType;
     private boolean isMainCourse;
