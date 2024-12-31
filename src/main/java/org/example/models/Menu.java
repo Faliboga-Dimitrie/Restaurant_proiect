@@ -7,8 +7,9 @@ import org.example.enums.MenuItemType;
 import java.util.Scanner;
 import java.util.function.Predicate;
 import java.util.function.Consumer;
+import org.example.interfaces.IMenu;
 
-public class Menu {
+public class Menu implements IMenu {
     private final ArrayList<Drink> drinks;
     private final ArrayList<Food> foods;
     private final HashMap<String, Integer> drinksByName = new HashMap<>();
@@ -248,7 +249,7 @@ public class Menu {
         }
     }
 
-    public static <T> void updateMenuItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+    private static <T> void updateMenuItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
         Predicate<T> condition = item -> {
             if (item instanceof MenuItem menuItem) {
                 return menuItem.getName().equals(itemName);
@@ -287,7 +288,7 @@ public class Menu {
         JsonUtil.updateElementInJson(fileName, clazz, condition, updater);
     }
 
-    public static <T> void updateDrinkItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+    private static <T> void updateDrinkItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
         Predicate<T> condition = item -> {
             if (item instanceof Drink drink) {
                 return drink.getName().equals(itemName);
@@ -314,7 +315,7 @@ public class Menu {
         JsonUtil.updateElementInJson(fileName, clazz, condition, updater);
     }
 
-    public static <T> void updateFoodItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
+    private static <T> void updateFoodItemInJson(String fileName, Class<T> clazz, String itemName, Object newValue, MenuUpdateType updateType) {
         Predicate<T> condition = item -> {
             if (item instanceof Food food) {
                 return food.getName().equals(itemName);

@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.example.enums.TableStatus;
+import org.example.interfaces.IRestaurant;
 
-public class Restaurant {
+public class Restaurant implements IRestaurant {
     private RestaurantData restaurantData;
     private Menu menu;
     private Staff staff;

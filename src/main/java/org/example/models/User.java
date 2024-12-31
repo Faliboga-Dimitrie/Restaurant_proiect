@@ -1,8 +1,9 @@
 package org.example.models;
 
 import org.example.enums.Role;
+import org.example.interfaces.IUser;
 
-public class User {
+public class User implements IUser {
     private String username;
     private String password;
     private Role role;

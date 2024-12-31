@@ -1,8 +1,9 @@
 package org.example.models;
 
 import org.example.enums.TableStatus;
+import org.example.interfaces.ITable;
 
-public class Table {
+public class Table implements ITable {
     private int tableNumber;
     private int numberOfSeats;
     private TableStatus status;
@@ -41,14 +42,13 @@ public class Table {
         System.out.println("The table is not available for reservation.");
     }
 
-    public boolean occupyTable() {
+    public void occupyTable() {
         if (status.equals(TableStatus.RESERVED) || status.equals(TableStatus.FREE)) {
             status = TableStatus.OCCUPIED;
             System.out.println("The table has been occupied.");
-            return true;
+            return;
         }
         System.out.println("The table cannot be occupied.");
-        return false;
     }
 
     public void freeTable() {

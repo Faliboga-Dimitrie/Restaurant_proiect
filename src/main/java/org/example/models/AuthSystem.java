@@ -3,8 +3,9 @@ package org.example.models;
 import java.util.HashMap;
 import java.util.Map;
 import org.example.enums.Role;
+import org.example.interfaces.IAuthSystem;
 
-public class AuthSystem {
+public class AuthSystem implements IAuthSystem {
     private final Map<String, User> users = new HashMap<>();
     private User currentUser;
 

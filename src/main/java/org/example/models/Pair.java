@@ -1,6 +1,8 @@
 package org.example.models;
 
-public class Pair<T, U> {
+import org.example.interfaces.IPair;
+
+public class Pair<T, U> implements IPair<T, U> {
     private T first;
     private U second;
 

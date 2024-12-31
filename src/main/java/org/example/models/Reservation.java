@@ -1,9 +1,9 @@
 package org.example.models;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import org.example.interfaces.IReservation;
 
-public class Reservation {
+public class Reservation implements IReservation {
     private static int nextId = 1;
     private final int reservationId;
     private String fullName;

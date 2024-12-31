@@ -3,8 +3,9 @@ package org.example.models;
 import java.util.*;
 import java.time.LocalDate;
 import org.example.enums.EmployeeUpdateType;
+import org.example.interfaces.IStaff;
 
-public class Staff {
+public class Staff implements IStaff {
     private final ArrayList<Employee> employees;
     private final HashMap<Integer,Integer> employeesById = new HashMap<>();
     private final HashMap<String,Integer> employeesByName = new HashMap<>();

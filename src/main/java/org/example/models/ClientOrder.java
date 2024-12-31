@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.example.interfaces.IClientOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClientOrder {
+public class ClientOrder implements IClientOrder {
     private ArrayList<Pair<Food,Integer>> foodItems;
     private ArrayList<Pair<Drink,Integer>> drinkItems;
     private String clientName;

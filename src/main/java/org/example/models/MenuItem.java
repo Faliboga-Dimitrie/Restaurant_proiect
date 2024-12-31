@@ -2,9 +2,11 @@ package org.example.models;
 
 import java.util.HashMap;
 import org.example.enums.IngredientUpdateType;
+import org.example.interfaces.IMenuItem;
+
 import java.util.Scanner;
 
-public class MenuItem   {
+public class MenuItem implements IMenuItem {
     protected HashMap<String,Ingredient> ingredients;
     protected String name;
     protected String description;
